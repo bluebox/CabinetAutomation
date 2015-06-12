@@ -1,0 +1,14 @@
+"Code";"Name";"L";"H";"P";"Grain";"Colour";"Material";"DESCRIZIONE";"TIPOLOGIA";"AREALAVORO1";"AREALAVORO2";"FILECAM1";"FILECAM2";"Quantity";"L2";"H2";"P2";"BORDOSOPRA";"BORDODESTRO";"BORDOSOTTO";"BORDOSINISTRO";"TOPEDGENAME";"RIGHTEDGENAME";"BOTTOMEDGENAME";"LEFTEDGENAME";"PRIORITYTOP";"PRIORITYRIGHT";"PRIORITYBOTTOM";"PRIORITYLEFT";"OWNERNAME";"RAWL";"RAWH";"RAWP";"NAMEVENEERPLANE";"NAMEVENEERBELOW";"IDVENEERPLANE";"IDVENEERBELOW"
+1;"BACK PANEL";2026;8;876;"";"";"";"BACK PANEL";"Back panel";"";"";"001pBCKP.cix";"";1;-202.6;-0.8;-87.6;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";202.6;0.8;87.6;"";"";"";""
+2;"TOP PANEL";900;18;600;"";"";"";"TOP PANEL";"Top/Bottom";"";"";"002pTPPN.cix";"";1;-90;-1.8;-60;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";90;1.8;60;"";"";"";""
+3;"BOTTOM";864;18;600;"";"";"";"BOTTOM";"Top/Bottom";"";"";"003pBTTM.cix";"";1;-86.4;-1.8;-60;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";86.4;1.8;60;"";"";"";""
+4;"LEFT LATERAL SIDE";2082;18;600;"";"";"";"LEFT LATERAL SIDE";"Lateral side";"";"";"004pLFTL.cix";"";1;-208.2;-1.8;-60;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";208.2;1.8;60;"";"";"";""
+5;"RIGHT LATERAL SIDE";2082;18;600;"";"";"";"RIGHT LATERAL SIDE";"Lateral side";"";"";"005pRGHT.cix";"";1;-208.2;-1.8;-60;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";208.2;1.8;60;"";"";"";""
+6;"VERTICAL PARTITION";2014;18;582;"";"";"";"VERTICAL PARTITION";"Partition";"";"";"006pVRTC.cix";"";1;-201.4;-1.8;-58.2;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";201.4;1.8;58.2;"";"";"";""
+7;"FRONT TOE KICK";864;18;50;"";"";"";"FRONT TOE KICK";"Toe kick board";"";"";"007pFRNT.cix";"";1;-86.4;-1.8;-5;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";86.4;1.8;5;"";"";"";""
+8;"SHELF";532;15;421;"";"";"";"SHELF";"Shelf";"";"";"008pSHLF.cix";"";1;-53.2;-1.5;-42.1;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";53.2;1.5;42.1;"";"";"";""
+9;"SHELF";532;15;421;"";"";"";"SHELF";"Shelf";"";"";"009pSHLF.cix";"";1;-53.2;-1.5;-42.1;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";53.2;1.5;42.1;"";"";"";""
+11;"PANEL";2048;20;448;"_";"";"";"PANEL";"Door panel";"A";"";"A011pPNL.cix";"";1;-204.8;-2;-44.8;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";204.8;2;44.8;"";"";"";""
+12;"PANEL";2048;20;448;"_";"";"";"PANEL";"Door panel";"A";"";"A012pPNL.cix";"";1;-204.8;-2;-44.8;"";"";"";"";"";"";"";"";44;0;2008379634;-571537390;"Cabinet5";204.8;2;44.8;"";"";"";""
+"";"";"";"";"";"";"";"";"";"";"";"";"";"";"";NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
+13;"HINGE1";48;70;25;"";"";"";"HINGE1";"Hinge";"";"";"";"";8;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL;NULL
