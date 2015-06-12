@@ -149,8 +149,6 @@ namespace CabinetAutomation
 
 				document.Save(filePath);
 			}
-
-			System.Diagnostics.Process.Start(filePath);
 		}
 
 		private String Substring(String s, int maxLength)
