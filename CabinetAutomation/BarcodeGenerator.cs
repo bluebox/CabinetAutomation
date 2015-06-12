@@ -18,11 +18,11 @@ namespace CabinetAutomation
 	public class BarcodeGenerator
 	{
 		private static Code128BarcodeDraw Code128 = BarcodeDrawFactory.Code128WithChecksum;
-		private const Int32 Height = 80;
+		private const Int32 Height = 40;
 
 		public static void Test(String code)
 		{
-			String filePath = String.Format("{0}.Png", code);
+			String filePath = String.Format("{0}.png", code);
 
 			Save(code, filePath);
 

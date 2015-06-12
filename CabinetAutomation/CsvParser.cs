@@ -14,7 +14,7 @@ namespace CabinetAutomation
 	public class CsvParser
 	{
 		public Char[] CsvSplitCharacters = new Char[] { ';' };
-		public List<Piece> Pieces = new List<Piece>();
+		public PartList Parts = new PartList();
 
 		public CsvParser(String fileName)
 		{
@@ -27,7 +27,7 @@ namespace CabinetAutomation
 
 		public void Load(String fileName)
 		{
-			this.Pieces.Clear();
+			this.Parts.Clear();
 
 			using (TextFieldParser parser = new TextFieldParser(fileName))
 			{
@@ -38,46 +38,89 @@ namespace CabinetAutomation
 				{
 					String[] parts = parser.ReadFields();
 
-					Piece p = Piece.FromCsvLine(parts, i);
+					Part p = Part.FromCsvLine(parts, i);
 
 					if (p != null)
 					{
 						Console.WriteLine("{0}: {1} {2}", p.Code, p.Description, p.Type);
 
-						this.Pieces.Add(p);
+						this.Parts.Add(p);
 					}
 				}
 			}
 		}
 	}
 
-	public class Piece
+	public class PartList : List<Part>
 	{
-		public String Code;
-		public String Name;
+		public Int32 TotalQuantity
+		{
+			get
+			{
+				Int32 t = 0;
+
+				foreach (Part p in this)
+				{
+					t += p.Quantity;
+				}
+
+				return t;
+			}
+		}
+
+		public PartList ExpandAndSort()
+		{
+			PartList parts = new PartList();
+
+			foreach (Part p in this)
+			{
+				if (String.IsNullOrEmpty(p.FileCam1))
+					continue;
+
+				for (int i = 0; i < p.Quantity; i++)
+				{
+					parts.Add(p);
+				}
+			}
+
+			parts.Sort();
+
+			foreach (Part p in parts)
+			{
+				Console.WriteLine("{3}: {0} - {1} - {2}", p.Material, p.Colour, p.H, p.Code);
+			}
+
+			return parts;
+		}
+	}
+
+	public class Part : IComparable
+	{
+		public String Code = String.Empty;
+		public String Name = String.Empty;
 		/// <summary>
 		/// L = longueur = Length
 		/// in mm.
 		/// </summary>
-		public Double? L;
+		public Decimal? L;
 
 		/// <summary>
 		/// H = hauteur = Height
 		/// in mm.
 		/// </summary>
-		public Double? H;
+		public Decimal? H;
 
 		/// <summary>
 		/// P = profondeur = depth
 		/// in mm.
 		/// </summary>
-		public Double? P;
+		public Decimal? P;
 
 		/// <summary>
 		/// L = longueur = Length
 		/// in mm.
 		/// </summary>
-		public Double? Length
+		public Decimal? Length
 		{
 			get
 			{
@@ -94,7 +137,7 @@ namespace CabinetAutomation
 		/// Alias for H = hauteur = Height
 		/// in mm.
 		/// </summary>
-		public Double? Height
+		public Decimal? Height
 		{
 			get
 			{
@@ -111,7 +154,7 @@ namespace CabinetAutomation
 		/// Alias for P = profondeur = depth
 		/// in mm.
 		/// </summary>
-		public Double? Depth
+		public Decimal? Depth
 		{
 			get
 			{
@@ -124,14 +167,14 @@ namespace CabinetAutomation
 			}
 		}
 
-		public String Grain;
-		public String Colour;
-		public String Material;
+		public String Grain = String.Empty;
+		public String Colour = String.Empty;
+		public String Material = String.Empty;
 		
 		/// <summary>
 		/// Descrizione = Description
 		/// </summary>
-		public String Descrizione;
+		public String Descrizione = String.Empty;
 
 		/// <summary>
 		/// Alias for Descrizione = Description
@@ -155,7 +198,7 @@ namespace CabinetAutomation
 		/// Ex: Lateral side
 		/// Ex: Door panel
 		/// </summary>
-		public String Tipologia;
+		public String Tipologia = String.Empty;
 
 
 		/// <summary>
@@ -180,8 +223,8 @@ namespace CabinetAutomation
 		/// <summary>
 		/// The cix file name for CNC machine.
 		/// </summary>
-		public String FileCam1;
-		public String FileCam2;
+		public String FileCam1 = String.Empty;
+		public String FileCam2 = String.Empty; 
 
 		public Int32 Quantity;
 
@@ -200,9 +243,9 @@ namespace CabinetAutomation
 		/// </summary>
 		public Double? P2;
 
-		public String OwnerName;
+		public String OwnerName = String.Empty;
 
-		public static Piece FromCsvLine(String[] parts, Int32 rowNumber)
+		public static Part FromCsvLine(String[] parts, Int32 rowNumber)
 		{
 			if (null == parts)
 			{
@@ -216,7 +259,7 @@ namespace CabinetAutomation
 				return null;
 			}
 
-			Piece p = new Piece();
+			Part p = new Part();
 
 			p.Code = parts[0].Trim();
 
@@ -236,7 +279,7 @@ namespace CabinetAutomation
 
 			try
 			{
-				p.L = Double.Parse(parts[2]);
+				p.L = Decimal.Parse(parts[2]);
 			}
 			catch (FormatException)
 			{
@@ -245,7 +288,7 @@ namespace CabinetAutomation
 
 			try
 			{
-				p.H = Double.Parse(parts[3]);
+				p.H = Decimal.Parse(parts[3]);
 			}
 			catch (FormatException)
 			{
@@ -254,19 +297,41 @@ namespace CabinetAutomation
 
 			try
 			{
-				p.P = Double.Parse(parts[4]);
+				p.P = Decimal.Parse(parts[4]);
 			}
 			catch (FormatException)
 			{
 				p.P = null;
 			}
+			if (null != parts[5])
+			{
+				p.Grain = parts[5];
+			}
 
-			p.Grain = parts[5];
-			p.Colour = parts[6];
-			p.Material = parts[7];
-			p.Descrizione = parts[8];
-			p.Tipologia = parts[9];
-			p.FileCam1 = parts[12];
+			if (null != parts[6])
+			{
+				p.Colour = parts[6];
+			}
+
+			if (null != parts[7])
+			{
+				p.Material = parts[7];
+			}
+
+			if (null != parts[8])
+			{
+				p.Descrizione = parts[8];
+			}
+
+			if (null != parts[9])
+			{
+				p.Tipologia = parts[9];
+			}
+
+			if (null != parts[12])
+			{
+				p.FileCam1 = parts[12];
+			}
 
 			try
 			{
@@ -279,14 +344,50 @@ namespace CabinetAutomation
 				return null;
 			}
 
-			p.OwnerName = parts[30];
-
-			if (p.OwnerName == null)
+			if (parts.Length > 30 && null != parts[30])
 			{
-				p.OwnerName = String.Empty;
+				p.OwnerName = parts[30];
 			}
 
 			return p;
 		}
+
+		public static Int32 Compare(Part p1, Part p2)
+		{
+			Int32 m1 = String.Compare(p1.Material, p2.Material);
+
+			if (m1 != 0)
+			{
+				return m1;
+			}
+
+			Int32 c1 = String.Compare(p1.Colour, p2.Colour);
+
+			if (c1 != 0)
+			{
+				return c1;
+			}
+
+			if (p1.H.HasValue && p2.H.HasValue)
+			{
+				Int32 h1 = Decimal.Compare(p1.H.Value, p2.H.Value);
+
+				if (h1 != 0)
+				{
+					return h1;
+				}
+			}
+
+			return String.Compare(p1.Code, p2.Code);
+		}
+
+		#region IComparable Members
+
+		public Int32 CompareTo(object obj)
+		{
+			return Part.Compare(this, obj as Part);
+		}
+
+		#endregion
 	}
 }
