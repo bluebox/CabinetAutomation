@@ -7,15 +7,20 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using CabinetAutomation.BiesseCabinet;
+using CabinetAutomation.BiesseCNC;
+using CabinetAutomation.BiesseBeamSaw;
 
 namespace CabinetAutomation
 {
 	public partial class CabinetAutomation : Form
 	{
-		private String inputFilePath = null;
-		private String labelFilePath = null;
-		private String xmlFilePath = null;
-		private LabelGenerator generator = new LabelGenerator();
+		private String biesseCabinetCsvFilePath = null;
+		private String biesseCncLabelFilePath = null;
+		private String beamSawXmlFilePathFormat = null;
+		private CsvParser biesseCabinetCsvParser = null;
+		private LabelGenerator labelGenerator = new LabelGenerator();
+		private XmlGenerator beamSawXmlGenerator = new XmlGenerator();
 
 		public CabinetAutomation()
 		{
@@ -24,7 +29,7 @@ namespace CabinetAutomation
 
 		private void submitButton_Click(object sender, EventArgs e)
 		{
-			if (this.inputFilePath == null)
+			if (this.biesseCabinetCsvFilePath == null)
 			{
 				MessageBox.Show("Please select input file.");
 
@@ -52,51 +57,67 @@ namespace CabinetAutomation
 				return;
 			}
 
-			this.generator.customerName = this.customerNameTextBox.Text;
-			this.generator.customerMobile = this.customerMobileTextBox.Text;
-			this.generator.dueDate = this.deliveryDateTextBox.Text;
+			this.labelGenerator.customerName = this.customerNameTextBox.Text;
+			this.labelGenerator.customerMobile = this.customerMobileTextBox.Text;
+			this.labelGenerator.dueDate = this.deliveryDateTextBox.Text;
 
-			String folder = Path.GetDirectoryName(this.inputFilePath);
-			String pdfFileName = String.Format("{0}-{1}.pdf", this.generator.customerName, this.generator.customerMobile);
+			String folder = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
+			String pdfFileName = String.Format("{0}-{1}.pdf", this.labelGenerator.customerName, this.labelGenerator.customerMobile);
 			
-			this.labelFilePath = Path.Combine(folder, pdfFileName);
+			this.biesseCncLabelFilePath = Path.Combine(folder, pdfFileName);
+			this.biesseCabinetCsvParser = new CsvParser(biesseCabinetCsvFilePath);
 
-			CsvParser parser = new CsvParser(inputFilePath);
+			this.labelGenerator.SaveToPdf(this.biesseCncLabelFilePath, biesseCabinetCsvParser.Parts);
 
-			this.generator.SaveToPdf(this.labelFilePath, parser.Parts);
+			String beamSawXmlFileNameFormat = String.Format("{0}-{1}-{2}.xml", 
+				this.labelGenerator.customerName, this.labelGenerator.customerMobile, "{0}");
+
+			this.beamSawXmlFilePathFormat = Path.Combine(folder, beamSawXmlFileNameFormat);
+
+			
+			beamSawXmlGenerator.Generate(biesseCabinetCsvParser.Parts, this.beamSawXmlFilePathFormat);
+
+			this.openPdfButton_Click(this.openPdfButton, null);
+			this.openXmlButton_Click(this.openXmlButton, null);
 		}
 
 		private void openPdfButton_Click(object sender, EventArgs e)
 		{
-			if (this.labelFilePath != null)
+			if (this.biesseCncLabelFilePath != null)
 			{
-				System.Diagnostics.Process.Start(labelFilePath);
+				System.Diagnostics.Process.Start(biesseCncLabelFilePath);
 			}
 		}
 
 		private void openPdfFolderButton_Click(object sender, EventArgs e)
 		{
-			if (this.labelFilePath != null)
+			if (this.biesseCncLabelFilePath != null)
 			{
 				// String folder = Path.GetDirectoryName(this.labelFilePath);
 
-				System.Diagnostics.Process.Start("explorer", "/select," + this.labelFilePath);
+				System.Diagnostics.Process.Start("explorer", "/select," + this.biesseCncLabelFilePath);
 			}
 		}
 
 		private void openXmlButton_Click(object sender, EventArgs e)
 		{
-			if (this.xmlFilePath != null)
+			if (this.beamSawXmlFilePathFormat != null)
 			{
-				System.Diagnostics.Process.Start(xmlFilePath);
+				HashSet<Decimal> thicknessValues = this.biesseCabinetCsvParser.Parts.ThicknessValues;
+
+				foreach (Decimal thickness in thicknessValues)
+				{
+					String beamSawXmlFilePath = String.Format(beamSawXmlFilePathFormat, thickness);
+					System.Diagnostics.Process.Start(beamSawXmlFilePath);
+				}
 			}
 		}
 
 		private void openXmlFolderButton_Click(object sender, EventArgs e)
 		{
-			if (this.xmlFilePath != null)
+			if (this.beamSawXmlFilePathFormat != null)
 			{
-				String folder = Path.GetDirectoryName(this.xmlFilePath);
+				String folder = Path.GetDirectoryName(this.beamSawXmlFilePathFormat);
 
 				System.Diagnostics.Process.Start(folder);
 			}
@@ -106,7 +127,7 @@ namespace CabinetAutomation
 		{
 			if (DialogResult.OK == this.openFileDialog1.ShowDialog())
 			{
-				this.inputFilePath = this.openFileDialog1.FileName;
+				this.biesseCabinetCsvFilePath = this.openFileDialog1.FileName;
 			}
 		}
 	}

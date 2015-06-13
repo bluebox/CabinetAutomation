@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Microsoft.VisualBasic.FileIO;
 
-namespace CabinetAutomation
+namespace CabinetAutomation.BiesseCabinet
 {
 	/// <summary>
 	/// Takes a csv output from basse cabinet and reads
@@ -53,6 +53,8 @@ namespace CabinetAutomation
 
 	public class PartList : List<Part>
 	{
+		public Boolean Expanded = false;
+
 		public Int32 TotalQuantity
 		{
 			get
@@ -68,26 +70,70 @@ namespace CabinetAutomation
 			}
 		}
 
-		public PartList ExpandAndSort()
+		public HashSet<Decimal> ThicknessValues
+		{
+			get
+			{
+				HashSet<Decimal> values = new HashSet<Decimal>();
+
+				foreach (Part p in this)
+				{
+					if (p.Height.HasValue)
+					{
+						values.Add(p.Height.Value);
+					}
+				}
+
+				return values;
+			}
+		}
+
+		public PartList Filter(Decimal thickness)
 		{
 			PartList parts = new PartList();
 
+			parts.Expanded = this.Expanded;
+
 			foreach (Part p in this)
 			{
-				if (String.IsNullOrEmpty(p.FileCam1))
-					continue;
-
-				for (int i = 0; i < p.Quantity; i++)
+				if (p.H.HasValue && p.H.Value == thickness)
 				{
 					parts.Add(p);
 				}
 			}
 
-			parts.Sort();
+			return parts;
+		}
 
-			foreach (Part p in parts)
+		public PartList RemoveParthWithoutFileCam1()
+		{
+			PartList parts = new PartList();
+
+			parts.Expanded = this.Expanded;
+
+			foreach (Part p in this)
 			{
-				Console.WriteLine("{3}: {0} - {1} - {2}", p.Material, p.Colour, p.H, p.Code);
+				if (!String.IsNullOrEmpty(p.FileCam1))
+				{
+					parts.Add(p);
+				}
+			}
+
+			return parts;
+		}
+
+		public PartList Expand()
+		{
+			PartList parts = new PartList();
+
+			parts.Expanded = true;
+
+			foreach (Part p in this)
+			{
+				for (int i = 0; i < p.Quantity; i++)
+				{
+					parts.Add(p);
+				}
 			}
 
 			return parts;

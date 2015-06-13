@@ -60,14 +60,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BarcodeGenerator.cs" />
-    <Compile Include="CsvParser.cs" />
+    <Compile Include="BiesseBeamSaw\XmlGenerator.cs" />
+    <Compile Include="BiesseCabinet\CsvParser.cs" />
     <Compile Include="CabinetAutomation.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="CabinetAutomation.Designer.cs">
       <DependentUpon>CabinetAutomation.cs</DependentUpon>
     </Compile>
-    <Compile Include="LabelGenerator.cs" />
+    <Compile Include="BiesseBeamSaw\CutList.cs" />
+    <Compile Include="BiesseCNC\LabelGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CabinetAutomation.resx">

@@ -6,8 +6,9 @@ using System.IO;
 using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using System.Drawing;
+using CabinetAutomation.BiesseCabinet;
 
-namespace CabinetAutomation
+namespace CabinetAutomation.BiesseCNC
 {
 	public class CFSize
 	{
@@ -76,7 +77,9 @@ namespace CabinetAutomation
 
 		public void SaveToPdf(String filePath, PartList parts)
 		{
-			parts = parts.ExpandAndSort();
+			parts = parts.Expand();
+			parts = parts.RemoveParthWithoutFileCam1();
+			parts.Sort();
 
 			if (null == filePath)
 			{
@@ -246,7 +249,7 @@ namespace CabinetAutomation
 				Substring(this.customerName, 15),
 				this.customerMobile);
 
-			g.DrawString(line5, arialLarge, brush, new XPoint(x, y));
+			g.DrawString(line5, arial8, brush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);
 
 			String line6 = this.dueDate;
