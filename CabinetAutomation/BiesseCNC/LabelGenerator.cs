@@ -219,7 +219,7 @@ namespace CabinetAutomation.BiesseCNC
 				y += XUnit.FromMillimeter(5);
 			}
 
-			String line3 = String.Format("{0} - {1} - {2}", 
+			String line3 = String.Format("{0} {1} {2}", 
 				Substring(p.Grain, 15), Substring(p.Colour, 15), 
 				Substring(p.Material, 15));
 
@@ -234,7 +234,7 @@ namespace CabinetAutomation.BiesseCNC
 
 			y += XUnit.FromMillimeter(5);
 
-			String line4 = String.Format("{0} X {1} X {2}", p.Length, p.Depth, p.Height);
+			String line4 = String.Format("{0}       {1} X {2} X {3}", p.Code, p.Length, p.Depth, p.Height);
 
 			if (line4.Length <= 0)
 			{
@@ -252,7 +252,7 @@ namespace CabinetAutomation.BiesseCNC
 			g.DrawString(line5, arial8, brush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);
 
-			String line6 = this.dueDate;
+			String line6 = String.Format("Due date: {0}", this.dueDate);
 
 			g.DrawString(line6, arial8, brush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);
