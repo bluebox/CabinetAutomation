@@ -32,7 +32,7 @@ namespace CabinetAutomation.BiesseCabinet
 			using (TextFieldParser parser = new TextFieldParser(fileName))
 			{
 				parser.TextFieldType = FieldType.Delimited;
-				parser.SetDelimiters(";");
+				parser.SetDelimiters(";", "\t", ",");
 
 				for (Int32 i = 0; !parser.EndOfData; i++)
 				{
@@ -105,7 +105,7 @@ namespace CabinetAutomation.BiesseCabinet
 			return parts;
 		}
 
-		public PartList RemoveParthWithoutFileCam1()
+		public PartList RemoveParthWithoutFileCamX()
 		{
 			PartList parts = new PartList();
 
@@ -113,7 +113,7 @@ namespace CabinetAutomation.BiesseCabinet
 
 			foreach (Part p in this)
 			{
-				if (!String.IsNullOrEmpty(p.FileCam1))
+				if (!String.IsNullOrEmpty(p.FileCamX))
 				{
 					parts.Add(p);
 				}
@@ -143,6 +143,15 @@ namespace CabinetAutomation.BiesseCabinet
 	public class Part : IComparable
 	{
 		public String Code = String.Empty;
+
+		public String CodePadded
+		{
+			get
+			{
+				return this.Code.PadLeft(3, '0');
+			}
+		}
+
 		public String Name = String.Empty;
 		/// <summary>
 		/// L = longueur = Length
@@ -270,7 +279,35 @@ namespace CabinetAutomation.BiesseCabinet
 		/// The cix file name for CNC machine.
 		/// </summary>
 		public String FileCam1 = String.Empty;
-		public String FileCam2 = String.Empty; 
+		public String FileCam2 = String.Empty;
+
+		public String FileCamX
+		{
+			get
+			{
+				if (!String.IsNullOrEmpty(this.FileCam1))
+				{
+					return this.FileCam1;
+				}
+
+				if (!String.IsNullOrEmpty(this.FileCam2))
+				{
+					if (this.FileCam2.Length == 8 + 1 + 3)
+					{
+						if (this.FileCam2[3] == 's')
+						{
+							StringBuilder sb = new StringBuilder(this.FileCam2);
+
+							sb[3] = 'p';
+
+							return sb.ToString();
+						}
+					}
+				}
+
+				return String.Empty;
+			}
+		}
 
 		public Int32 Quantity;
 
@@ -349,6 +386,7 @@ namespace CabinetAutomation.BiesseCabinet
 			{
 				p.P = null;
 			}
+
 			if (null != parts[5])
 			{
 				p.Grain = parts[5];
@@ -379,6 +417,11 @@ namespace CabinetAutomation.BiesseCabinet
 				p.FileCam1 = parts[12];
 			}
 
+			if (null != parts[13])
+			{
+				p.FileCam2 = parts[13];
+			}
+
 			try
 			{
 				p.Quantity = Int32.Parse(parts[14]);
@@ -390,9 +433,9 @@ namespace CabinetAutomation.BiesseCabinet
 				return null;
 			}
 
-			if (parts.Length > 30 && null != parts[30])
+			if (parts.Length > 32 && null != parts[32])
 			{
-				p.OwnerName = parts[30];
+				p.OwnerName = parts[32];
 			}
 
 			return p;
@@ -424,7 +467,7 @@ namespace CabinetAutomation.BiesseCabinet
 				}
 			}
 
-			return String.Compare(p1.Code, p2.Code);
+			return String.Compare(p1.CodePadded, p2.CodePadded);
 		}
 
 		#region IComparable Members

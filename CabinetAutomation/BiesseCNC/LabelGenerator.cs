@@ -78,7 +78,7 @@ namespace CabinetAutomation.BiesseCNC
 		public void SaveToPdf(String filePath, PartList parts)
 		{
 			parts = parts.Expand();
-			parts = parts.RemoveParthWithoutFileCam1();
+			parts = parts.RemoveParthWithoutFileCamX();
 			parts.Sort();
 
 			if (null == filePath)
@@ -183,7 +183,7 @@ namespace CabinetAutomation.BiesseCNC
 
 			XUnit y = r.Top;
 			XUnit x = r.Left + XUnit.FromMillimeter(5);
-			String barcodeText = p.FileCam1;
+			String barcodeText = p.FileCamX;
 
 			// Extra top space
 			y += XUnit.FromMillimeter(5);
@@ -234,7 +234,8 @@ namespace CabinetAutomation.BiesseCNC
 
 			y += XUnit.FromMillimeter(5);
 
-			String line4 = String.Format("{0}       {1} X {2} X {3}", p.Code, p.Length, p.Depth, p.Height);
+			String line4 = String.Format("{1} X {2} X {3}", 
+				p.Code.PadLeft(3, ' '), p.Length, p.Depth, p.Height);
 
 			if (line4.Length <= 0)
 			{

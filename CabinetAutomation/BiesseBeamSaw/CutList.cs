@@ -84,8 +84,9 @@ namespace CabinetAutomation.BiesseBeamSaw
 		[XmlAttribute]
 		public String W;
 
-//		[XmlAttribute]
-//		public String qMin;
+		[XmlAttribute]
+		public String qMin = "1";
+
 		[XmlAttribute]
 		public String Grain = "0";
 
@@ -112,15 +113,23 @@ namespace CabinetAutomation.BiesseBeamSaw
 				this.Grain = part.Grain;
 			}
 
-			if (!String.IsNullOrEmpty(part.FileCam1))
+			String fileCamX = part.FileCamX;
+
+			if (!String.IsNullOrEmpty(fileCamX))
 			{
-				this.IDesc = part.FileCam1;
+				this.IDesc = String.Format("{0} {1}", part.Code, part.Name);
 			}
 
 			if (!String.IsNullOrEmpty(part.Code))
 			{
-				this.IIDesc = part.Code;
+				this.IIDesc = part.FileCamX;
 			}
+
+			///
+			/// TODO: This is under the assumption that
+			/// the parts list is expanded.
+			/// 
+			this.qMin = "1";
 		}
 
 		public XmlElement MakeTree(XmlDocument document)
@@ -131,6 +140,11 @@ namespace CabinetAutomation.BiesseBeamSaw
 			c.SetAttribute("L", this.L);
 			c.SetAttribute("W", this.W);
 			c.SetAttribute("Grain", this.Grain);
+
+			if (!String.IsNullOrEmpty(this.qMin))
+			{
+				c.SetAttribute("qMin", this.qMin);
+			}
 
 			if (!String.IsNullOrEmpty(this.IDesc))
 			{

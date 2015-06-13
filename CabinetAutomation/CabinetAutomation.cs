@@ -74,7 +74,6 @@ namespace CabinetAutomation
 
 			this.beamSawXmlFilePathFormat = Path.Combine(folder, beamSawXmlFileNameFormat);
 
-			
 			beamSawXmlGenerator.Generate(biesseCabinetCsvParser.Parts, this.beamSawXmlFilePathFormat);
 
 			this.openPdfButton_Click(this.openPdfButton, null);
