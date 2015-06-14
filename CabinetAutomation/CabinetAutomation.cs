@@ -76,8 +76,8 @@ namespace CabinetAutomation
 
 			beamSawXmlGenerator.Generate(biesseCabinetCsvParser.Parts, this.beamSawXmlFilePathFormat);
 
-			this.openPdfButton_Click(this.openPdfButton, null);
-			this.openXmlButton_Click(this.openXmlButton, null);
+			// this.openPdfButton_Click(this.openPdfButton, null);
+			// this.openXmlButton_Click(this.openXmlButton, null);
 		}
 
 		private void openPdfButton_Click(object sender, EventArgs e)
@@ -107,6 +107,7 @@ namespace CabinetAutomation
 				foreach (Decimal thickness in thicknessValues)
 				{
 					String beamSawXmlFilePath = String.Format(beamSawXmlFilePathFormat, thickness);
+					
 					System.Diagnostics.Process.Start(beamSawXmlFilePath);
 				}
 			}

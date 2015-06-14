@@ -77,8 +77,8 @@ namespace CabinetAutomation.BiesseCNC
 
 		public void SaveToPdf(String filePath, PartList parts)
 		{
-			parts = parts.Expand();
-			parts = parts.RemoveParthWithoutFileCamX();
+			parts = parts.PartsAfterExpanding();
+			parts = parts.PartsWithoutFileCamX();
 			parts.Sort();
 
 			if (null == filePath)

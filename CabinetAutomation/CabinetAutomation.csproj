@@ -62,6 +62,8 @@
     <Compile Include="BarcodeGenerator.cs" />
     <Compile Include="BiesseBeamSaw\XmlGenerator.cs" />
     <Compile Include="BiesseCabinet\CsvParser.cs" />
+    <Compile Include="BiesseCabinet\Part.cs" />
+    <Compile Include="BiesseCabinet\PartList.cs" />
     <Compile Include="CabinetAutomation.cs">
       <SubType>Form</SubType>
     </Compile>

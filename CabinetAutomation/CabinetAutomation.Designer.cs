@@ -30,20 +30,20 @@
 		{
 			this.label1 = new System.Windows.Forms.Label();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.customerNameTextBox = new System.Windows.Forms.TextBox();
-			this.customerMobileTextBox = new System.Windows.Forms.TextBox();
-			this.deliveryDateTextBox = new System.Windows.Forms.TextBox();
-			this.label2 = new System.Windows.Forms.Label();
-			this.label3 = new System.Windows.Forms.Label();
-			this.submitButton = new System.Windows.Forms.Button();
-			this.openPdfButton = new System.Windows.Forms.Button();
-			this.openXmlButton = new System.Windows.Forms.Button();
-			this.openPdfFolderButton = new System.Windows.Forms.Button();
-			this.openXmlFolderButton = new System.Windows.Forms.Button();
-			this.label4 = new System.Windows.Forms.Label();
-			this.label5 = new System.Windows.Forms.Label();
-			this.label6 = new System.Windows.Forms.Label();
 			this.browseButton = new System.Windows.Forms.Button();
+			this.label6 = new System.Windows.Forms.Label();
+			this.label5 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.openXmlFolderButton = new System.Windows.Forms.Button();
+			this.openPdfFolderButton = new System.Windows.Forms.Button();
+			this.openXmlButton = new System.Windows.Forms.Button();
+			this.openPdfButton = new System.Windows.Forms.Button();
+			this.submitButton = new System.Windows.Forms.Button();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label2 = new System.Windows.Forms.Label();
+			this.deliveryDateTextBox = new System.Windows.Forms.TextBox();
+			this.customerMobileTextBox = new System.Windows.Forms.TextBox();
+			this.customerNameTextBox = new System.Windows.Forms.TextBox();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
@@ -79,87 +79,42 @@
 			this.panel1.Size = new System.Drawing.Size(369, 213);
 			this.panel1.TabIndex = 1;
 			// 
-			// customerNameTextBox
+			// browseButton
 			// 
-			this.customerNameTextBox.Location = new System.Drawing.Point(128, 4);
-			this.customerNameTextBox.Name = "customerNameTextBox";
-			this.customerNameTextBox.Size = new System.Drawing.Size(238, 20);
-			this.customerNameTextBox.TabIndex = 1;
-			this.customerNameTextBox.Text = "Mithun Dhali";
+			this.browseButton.Location = new System.Drawing.Point(128, 84);
+			this.browseButton.Name = "browseButton";
+			this.browseButton.Size = new System.Drawing.Size(75, 23);
+			this.browseButton.TabIndex = 14;
+			this.browseButton.Text = "Browse";
+			this.browseButton.UseVisualStyleBackColor = true;
+			this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
 			// 
-			// customerMobileTextBox
+			// label6
 			// 
-			this.customerMobileTextBox.Location = new System.Drawing.Point(128, 31);
-			this.customerMobileTextBox.Name = "customerMobileTextBox";
-			this.customerMobileTextBox.Size = new System.Drawing.Size(238, 20);
-			this.customerMobileTextBox.TabIndex = 2;
-			this.customerMobileTextBox.Text = "9833568580";
+			this.label6.AutoSize = true;
+			this.label6.Location = new System.Drawing.Point(5, 89);
+			this.label6.Name = "label6";
+			this.label6.Size = new System.Drawing.Size(52, 13);
+			this.label6.TabIndex = 13;
+			this.label6.Text = "Input Csv";
 			// 
-			// deliveryDateTextBox
+			// label5
 			// 
-			this.deliveryDateTextBox.Location = new System.Drawing.Point(128, 58);
-			this.deliveryDateTextBox.Name = "deliveryDateTextBox";
-			this.deliveryDateTextBox.Size = new System.Drawing.Size(238, 20);
-			this.deliveryDateTextBox.TabIndex = 3;
-			this.deliveryDateTextBox.Text = "28-Jun-2015";
+			this.label5.AutoSize = true;
+			this.label5.Location = new System.Drawing.Point(3, 190);
+			this.label5.Name = "label5";
+			this.label5.Size = new System.Drawing.Size(59, 13);
+			this.label5.TabIndex = 12;
+			this.label5.Text = "Beam XML";
 			// 
-			// label2
+			// label4
 			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 34);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(85, 13);
-			this.label2.TabIndex = 4;
-			this.label2.Text = "Customer Mobile";
-			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(3, 61);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(71, 13);
-			this.label3.TabIndex = 5;
-			this.label3.Text = "Delivery Date";
-			// 
-			// submitButton
-			// 
-			this.submitButton.Location = new System.Drawing.Point(128, 111);
-			this.submitButton.Name = "submitButton";
-			this.submitButton.Size = new System.Drawing.Size(75, 23);
-			this.submitButton.TabIndex = 6;
-			this.submitButton.Text = "Submit";
-			this.submitButton.UseVisualStyleBackColor = true;
-			this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
-			// 
-			// openPdfButton
-			// 
-			this.openPdfButton.Location = new System.Drawing.Point(128, 156);
-			this.openPdfButton.Name = "openPdfButton";
-			this.openPdfButton.Size = new System.Drawing.Size(75, 23);
-			this.openPdfButton.TabIndex = 7;
-			this.openPdfButton.Text = "Open";
-			this.openPdfButton.UseVisualStyleBackColor = true;
-			this.openPdfButton.Click += new System.EventHandler(this.openPdfButton_Click);
-			// 
-			// openXmlButton
-			// 
-			this.openXmlButton.Location = new System.Drawing.Point(128, 185);
-			this.openXmlButton.Name = "openXmlButton";
-			this.openXmlButton.Size = new System.Drawing.Size(75, 23);
-			this.openXmlButton.TabIndex = 8;
-			this.openXmlButton.Text = "Open";
-			this.openXmlButton.UseVisualStyleBackColor = true;
-			this.openXmlButton.Click += new System.EventHandler(this.openXmlButton_Click);
-			// 
-			// openPdfFolderButton
-			// 
-			this.openPdfFolderButton.Location = new System.Drawing.Point(210, 156);
-			this.openPdfFolderButton.Name = "openPdfFolderButton";
-			this.openPdfFolderButton.Size = new System.Drawing.Size(75, 23);
-			this.openPdfFolderButton.TabIndex = 9;
-			this.openPdfFolderButton.Text = "Open Folder";
-			this.openPdfFolderButton.UseVisualStyleBackColor = true;
-			this.openPdfFolderButton.Click += new System.EventHandler(this.openPdfFolderButton_Click);
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(5, 161);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(57, 13);
+			this.label4.TabIndex = 11;
+			this.label4.Text = "Label PDF";
 			// 
 			// openXmlFolderButton
 			// 
@@ -171,42 +126,87 @@
 			this.openXmlFolderButton.UseVisualStyleBackColor = true;
 			this.openXmlFolderButton.Click += new System.EventHandler(this.openXmlFolderButton_Click);
 			// 
-			// label4
+			// openPdfFolderButton
 			// 
-			this.label4.AutoSize = true;
-			this.label4.Location = new System.Drawing.Point(5, 161);
-			this.label4.Name = "label4";
-			this.label4.Size = new System.Drawing.Size(57, 13);
-			this.label4.TabIndex = 11;
-			this.label4.Text = "Label PDF";
+			this.openPdfFolderButton.Location = new System.Drawing.Point(210, 156);
+			this.openPdfFolderButton.Name = "openPdfFolderButton";
+			this.openPdfFolderButton.Size = new System.Drawing.Size(75, 23);
+			this.openPdfFolderButton.TabIndex = 9;
+			this.openPdfFolderButton.Text = "Open Folder";
+			this.openPdfFolderButton.UseVisualStyleBackColor = true;
+			this.openPdfFolderButton.Click += new System.EventHandler(this.openPdfFolderButton_Click);
 			// 
-			// label5
+			// openXmlButton
 			// 
-			this.label5.AutoSize = true;
-			this.label5.Location = new System.Drawing.Point(3, 190);
-			this.label5.Name = "label5";
-			this.label5.Size = new System.Drawing.Size(59, 13);
-			this.label5.TabIndex = 12;
-			this.label5.Text = "Beam XML";
+			this.openXmlButton.Location = new System.Drawing.Point(128, 185);
+			this.openXmlButton.Name = "openXmlButton";
+			this.openXmlButton.Size = new System.Drawing.Size(75, 23);
+			this.openXmlButton.TabIndex = 8;
+			this.openXmlButton.Text = "Open";
+			this.openXmlButton.UseVisualStyleBackColor = true;
+			this.openXmlButton.Click += new System.EventHandler(this.openXmlButton_Click);
 			// 
-			// label6
+			// openPdfButton
 			// 
-			this.label6.AutoSize = true;
-			this.label6.Location = new System.Drawing.Point(5, 89);
-			this.label6.Name = "label6";
-			this.label6.Size = new System.Drawing.Size(52, 13);
-			this.label6.TabIndex = 13;
-			this.label6.Text = "Input Csv";
+			this.openPdfButton.Location = new System.Drawing.Point(128, 156);
+			this.openPdfButton.Name = "openPdfButton";
+			this.openPdfButton.Size = new System.Drawing.Size(75, 23);
+			this.openPdfButton.TabIndex = 7;
+			this.openPdfButton.Text = "Open";
+			this.openPdfButton.UseVisualStyleBackColor = true;
+			this.openPdfButton.Click += new System.EventHandler(this.openPdfButton_Click);
 			// 
-			// browseButton
+			// submitButton
 			// 
-			this.browseButton.Location = new System.Drawing.Point(128, 84);
-			this.browseButton.Name = "browseButton";
-			this.browseButton.Size = new System.Drawing.Size(75, 23);
-			this.browseButton.TabIndex = 14;
-			this.browseButton.Text = "Browse";
-			this.browseButton.UseVisualStyleBackColor = true;
-			this.browseButton.Click += new System.EventHandler(this.browseButton_Click);
+			this.submitButton.Location = new System.Drawing.Point(128, 111);
+			this.submitButton.Name = "submitButton";
+			this.submitButton.Size = new System.Drawing.Size(75, 23);
+			this.submitButton.TabIndex = 6;
+			this.submitButton.Text = "Submit";
+			this.submitButton.UseVisualStyleBackColor = true;
+			this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(3, 61);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(71, 13);
+			this.label3.TabIndex = 5;
+			this.label3.Text = "Delivery Date";
+			// 
+			// label2
+			// 
+			this.label2.AutoSize = true;
+			this.label2.Location = new System.Drawing.Point(3, 34);
+			this.label2.Name = "label2";
+			this.label2.Size = new System.Drawing.Size(85, 13);
+			this.label2.TabIndex = 4;
+			this.label2.Text = "Customer Mobile";
+			// 
+			// deliveryDateTextBox
+			// 
+			this.deliveryDateTextBox.Location = new System.Drawing.Point(128, 58);
+			this.deliveryDateTextBox.Name = "deliveryDateTextBox";
+			this.deliveryDateTextBox.Size = new System.Drawing.Size(238, 20);
+			this.deliveryDateTextBox.TabIndex = 3;
+			this.deliveryDateTextBox.Text = "28-Jun-2015";
+			// 
+			// customerMobileTextBox
+			// 
+			this.customerMobileTextBox.Location = new System.Drawing.Point(128, 31);
+			this.customerMobileTextBox.Name = "customerMobileTextBox";
+			this.customerMobileTextBox.Size = new System.Drawing.Size(238, 20);
+			this.customerMobileTextBox.TabIndex = 2;
+			this.customerMobileTextBox.Text = "0011001100";
+			// 
+			// customerNameTextBox
+			// 
+			this.customerNameTextBox.Location = new System.Drawing.Point(128, 4);
+			this.customerNameTextBox.Name = "customerNameTextBox";
+			this.customerNameTextBox.Size = new System.Drawing.Size(238, 20);
+			this.customerNameTextBox.TabIndex = 1;
+			this.customerNameTextBox.Text = "Santosh";
 			// 
 			// openFileDialog1
 			// 

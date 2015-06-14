@@ -22,7 +22,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 		public CutList(Decimal thickness, PartList parts)
 		{
-			parts = parts.Expand().Filter(thickness);
+			parts = parts.PartsAfterExpanding().PartsAfterFilter(thickness);
 			parts.Sort();
 
 			this.parts = new List<BeamSawPart>();
