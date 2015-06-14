@@ -248,7 +248,7 @@ namespace CabinetAutomation.BiesseCabinet
 				return null;
 			}
 
-			if (parts.Length < 15)
+			if (parts.Length < 36)
 			{
 				Console.WriteLine("Ignoring row {0} with less than 15 columns", rowNumber);
 
@@ -345,6 +345,18 @@ namespace CabinetAutomation.BiesseCabinet
 
 				return null;
 			}
+
+			p.BordoSopra = parts[18];
+			p.BordoDestro = parts[19];
+			p.BordoSotto = parts[20];
+			p.BordoSinistro = parts[21];
+
+			p.Customer = parts[22];
+			p.BloccoAppartenenza = parts[23];
+			p.TopEdgeName = parts[24];
+			p.RightEdgeName = parts[25];
+			p.BottomEdgeName = parts[26];
+			p.TopEdgeName = parts[27];
 
 			if (parts.Length > 32 && null != parts[32])
 			{
