@@ -180,26 +180,107 @@ namespace CabinetAutomation.BiesseCabinet
 		/// <summary>
 		/// -L in cm.
 		/// </summary>
-		public Double? L2;
+		public Decimal? L2;
 
 		/// <summary>
 		/// -H in cm.
 		/// </summary>
-		public Double? H2;
+		public Decimal? H2;
 
 		/// <summary>
 		/// -P in cm.
 		/// </summary>
-		public Double? P2;
+		public Decimal? P2;
 
 		public String OwnerName = String.Empty;
 
+		/// <summary>
+		/// BordoSopra = BoardTop
+		/// </summary>
 		public String BordoSopra;
+
+		/// <summary>
+		/// BordoSopra = BoardTop
+		/// </summary>
+		public String BoardTop
+		{
+			get
+			{
+				return BordoSopra;
+			}
+
+			set
+			{
+				this.BordoSopra = value;
+			}
+		}
+
+		/// <summary>
+		/// BordoDestro = BoardRight
+		/// </summary>
 		public String BordoDestro;
+
+		/// <summary>
+		/// BordoDestro = BoardRight
+		/// </summary>
+		public String BoardRight
+		{
+			get
+			{
+				return this.BordoDestro;
+			}
+
+			set
+			{
+				this.BordoDestro = value;
+			}
+		}
+
+		/// <summary>
+		/// BordoSotto = BoardBellow
+		/// </summary>
 		public String BordoSotto;
+
+		/// <summary>
+		/// BordoSotto = BoardBellow
+		/// </summary>
+		public String BoardBellow
+		{
+			get
+			{
+				return this.BordoSotto;
+			}
+
+			set
+			{
+				this.BordoSotto = value;
+			}
+		}
+
+		/// <summary>
+		/// BordoSinistro = BoardLeft
+		/// </summary>
 		public String BordoSinistro;
+
+		/// <summary>
+		/// BordoSinistro = BoardLeft
+		/// </summary>
+		public String BoardLeft
+		{
+			get
+			{
+				return this.BordoSinistro;
+			}
+
+			set
+			{
+				this.BordoSinistro = value;
+			}
+		}
+
 		public String Customer;
 		public String BloccoAppartenenza;
+
 		public String TopEdgeName;
 		public String RightEdgeName;
 		public String BottomEdgeName;
@@ -239,7 +320,6 @@ namespace CabinetAutomation.BiesseCabinet
 			this.LeftEdgeName = p.LeftEdgeName;
 			this.OwnerName = p.OwnerName;
 		}
-
 
 		public static Part FromCsvLine(String[] parts, Int32 rowNumber)
 		{
@@ -366,8 +446,98 @@ namespace CabinetAutomation.BiesseCabinet
 			return p;
 		}
 
-		public static Int32 Compare(Part p1, Part p2)
+		/// <summary>
+		/// Rotates the board anti clock wise.
+		/// </summary>
+		public void Rotate()
 		{
+			{
+				Decimal? temp = this.L;
+
+				this.L = this.P;
+				this.P = temp;
+			}
+
+			{
+				Decimal? temp = this.L2;
+
+				this.L2 = this.P2;
+				this.P2 = temp;
+			}
+
+			{
+				String temp = this.BoardTop;
+
+				this.BoardTop = this.BoardRight;
+				this.BoardRight = this.BoardBellow;
+				this.BoardBellow = this.BoardLeft;
+				this.BoardLeft = temp;
+			}
+
+			{
+				String temp = this.TopEdgeName;
+
+				this.TopEdgeName = this.RightEdgeName;
+				this.RightEdgeName = this.BottomEdgeName;
+				this.BottomEdgeName = this.LeftEdgeName;
+				this.LeftEdgeName = temp;
+			}
+		}
+
+		/// <summary>
+		/// HinshitsuQuoteOpenIntelligenceQuoteCloseSetGrain
+		/// 
+		/// We set the grain by making L > P.
+		/// 
+		/// If L < P, we rotate the board anti-clockwise.
+		/// </summary>
+		public void HinshitsuIntelligenceSetGrain()
+		{
+			if (!"0".Equals(this.Grain))
+			{
+				return;
+			}
+
+			if (!this.L.HasValue || !this.P.HasValue)
+			{
+				return;
+			}
+
+			if (this.L.Value < this.P.Value)
+			{
+				this.Rotate();
+			}
+		}
+
+		public String GetEdgeBinding(String s)
+		{
+			if (String.IsNullOrEmpty(s))
+			{
+				return String.Empty;
+			}
+
+			if (!s.StartsWith("PVC"))
+			{
+				return String.Empty;
+			}
+
+			s = s.Substring(3).Trim();
+
+			return s;
+		}
+
+		#region IComparable Members
+
+		public Int32 CompareTo(Part part)
+		{
+			return (this as IComparable).CompareTo(part);
+		}
+
+		int IComparable.CompareTo(object obj)
+		{
+			Part p1 = this;
+			Part p2 = obj as Part;
+
 			Int32 m1 = String.Compare(p1.Material, p2.Material);
 
 			if (m1 != 0)
@@ -395,49 +565,13 @@ namespace CabinetAutomation.BiesseCabinet
 			return String.Compare(p1.CodePadded, p2.CodePadded);
 		}
 
-		/// <summary>
-		/// TODO: This has to apply on other edges.
-		/// </summary>
-		public void HinshitsuIntelligentGrainRotate()
-		{
-			if (!"0".Equals(this.Grain))
-			{
-				return;
-			}
-
-			if (!this.L.HasValue || !this.P.HasValue)
-			{
-				return;
-			}
-
-			if (this.L.Value < this.P.Value)
-			{
-				Decimal? temp = this.L;
-
-				this.L = this.P;
-				this.P = temp;
-			}
-		}
-
-		#region IComparable Members
-
-		public Int32 CompareTo(object obj)
-		{
-			return Part.Compare(this, obj as Part);
-		}
-
-		int IComparable.CompareTo(object obj)
-		{
-			return Part.Compare(this, obj as Part);
-		}
-
 		#endregion
 
 		#region ICloneable Members
 
 		public Part Clone()
 		{
-			return new Part(this);
+			return (this as ICloneable).Clone() as Part;
 		}
 
 		object ICloneable.Clone()

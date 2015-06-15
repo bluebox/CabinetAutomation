@@ -7,6 +7,7 @@ using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using System.Drawing;
 using CabinetAutomation.BiesseCabinet;
+using System.Windows.Forms;
 
 namespace CabinetAutomation.BiesseCNC
 {
@@ -64,9 +65,20 @@ namespace CabinetAutomation.BiesseCNC
 		public CFMargin PageMargin;
 		public CFMargin LabelMargin;
 
-		public String customerName = String.Empty;
-		public String customerMobile = String.Empty;
-		public String dueDate = String.Empty;
+		public DateTime dueDate = DateTime.Today.AddDays(14);
+
+		static XPen PenLightGray1pt = new XPen(XColor.FromKnownColor(KnownColor.LightGray), XUnit.FromPoint(1));
+		static XPen PenBlack1pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(1));
+		static XPen PenBlack3pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(3));
+		static XFont Arial8 = new XFont("Arial", 8, XFontStyle.Regular);
+		static XFont ArialLarge = new XFont("Arial", 20, XFontStyle.Regular);
+		static XBrush blackBrush = XBrushes.Black;
+
+		static Decimal Binding00 = new Decimal(0);
+		static Decimal Binding08 = new Decimal(0.8);
+		static Decimal Binding10 = new Decimal(1.0);
+		static Decimal Binding13 = new Decimal(1.3);
+		static Decimal Binding20 = new Decimal(2.0);
 
 		public LabelGenerator()
 		{
@@ -97,6 +109,8 @@ namespace CabinetAutomation.BiesseCNC
 			{
 				document.Info.Author = "Mithun Dhali, HINSHITSU Manufacturing Private Limited";
 				document.Info.Creator = "HINSHISU Cabinet Automation";
+				document.Info.CreationDate = DateTime.Now;
+				// document.Info.Producer = "HINSHISU Cabinet Automation";
 
 				Int32 labelsPerPage = this.RowPerPage * this.ColumnPerPage;
 				Int32 numberOfPage = (int)(Math.Ceiling(parts.Count * 1.0 / labelsPerPage));
@@ -136,7 +150,7 @@ namespace CabinetAutomation.BiesseCNC
 
 						graphics = XGraphics.FromPdfPage(page);
 
-						graphics.DrawRectangle(pen, new XRect(this.PageMargin.Left, this.PageMargin.Top, pageSizeAfterMargin.Width, pageSizeAfterMargin.Height));
+						// graphics.DrawRectangle(pen, new XRect(this.PageMargin.Left, this.PageMargin.Top, pageSizeAfterMargin.Width, pageSizeAfterMargin.Height));
 					}
 
 					XPoint labelOffset = new XPoint(
@@ -172,18 +186,22 @@ namespace CabinetAutomation.BiesseCNC
 		/// <summary>
 		/// Draws the given part inside the given rectangle.
 		/// </summary>
+		/// <param name="graphics"></param>
 		/// <param name="rectangle">The bounds.</param>
 		/// <param name="part">The part.</param>
-		private void DrawLabel(XGraphics g, XRect r, Part p)
+		private void DrawLabel(XGraphics graphics, XRect rectangle, Part part)
 		{
-			XPen pen = new XPen(XColor.FromKnownColor(KnownColor.Purple), XUnit.FromPoint(1));
-			XFont arial8 = new XFont("arial", 8, XFontStyle.Regular);
-			XFont arialLarge = new XFont("arial", 20, XFontStyle.Regular);
-			XBrush brush = XBrushes.Black;
+			if (part.Length < part.Depth)
+			{
+				part = part.Clone();
 
-			XUnit y = r.Top;
-			XUnit x = r.Left + XUnit.FromMillimeter(5);
-			String barcodeText = p.FileCamX;
+				part.Rotate();
+			}
+
+
+			XUnit y = rectangle.Top + XUnit.FromMillimeter(5);
+			XUnit x = rectangle.Left + XUnit.FromMillimeter(20);
+			String barcodeText = part.FileCamX;
 
 			// Extra top space
 			y += XUnit.FromMillimeter(5);
@@ -192,73 +210,187 @@ namespace CabinetAutomation.BiesseCNC
 			{
 				Image image = BarcodeGenerator.Get(barcodeText);
 				XImage xImage = XImage.FromGdiPlusImage(image);
-				XUnit x1 = XUnit.FromMillimeter(r.Left + (r.Width - xImage.PointWidth) / 2);
+				XUnit x1 = XUnit.FromMillimeter(rectangle.Left + (rectangle.Width - xImage.PointWidth) / 2);
 
 				XPoint point = new XPoint(x, y + 5);
 
-				g.DrawImage(xImage, point);
+				graphics.DrawImage(xImage, point);
 
 				y += XUnit.FromPoint(xImage.PointHeight);
 				y += XUnit.FromMillimeter(6);
 
-				g.DrawString(barcodeText, arial8, brush, new XPoint(x, y));
+				graphics.DrawString(barcodeText, Arial8, blackBrush, new XPoint(x, y));
 				y += XUnit.FromMillimeter(5);
 			}
 
 			String line1 = String.Format("{0} - {1} - {2}", 
-				p.Code, Substring(p.Description, 20), Substring(p.Type, 20));
+				part.Code, Substring(part.Description, 20), Substring(part.Type, 20));
 
-			g.DrawString(line1, arial8, brush, new XPoint(x, y));
+			graphics.DrawString(line1, Arial8, blackBrush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);
 
-			String line2 = p.OwnerName;
+			String line2 = part.OwnerName;
 
 			if (line2.Length > 0)
 			{
-				g.DrawString(line2, arial8, brush, new XPoint(x, y));
+				graphics.DrawString(line2, Arial8, blackBrush, new XPoint(x, y));
 				y += XUnit.FromMillimeter(5);
 			}
 
 			String line3 = String.Format("{0} {1} {2}", 
-				Substring(p.Grain, 15), Substring(p.Colour, 15), 
-				Substring(p.Material, 15));
+				Substring(part.Grain, 15), Substring(part.Colour, 15), 
+				Substring(part.Material, 15));
 
 			if (line3.Length <= 0)
 			{
 				line3 = String.Empty;
 			}
 			{
-				g.DrawString(line3, arial8, brush, new XPoint(x, y));
+				graphics.DrawString(line3, Arial8, blackBrush, new XPoint(x, y));
 				y += XUnit.FromMillimeter(5);
 			}
 
-			y += XUnit.FromMillimeter(5);
-
-			String line4 = String.Format("{1} X {2} X {3}", 
-				p.Code.PadLeft(3, ' '), p.Length, p.Depth, p.Height);
-
-			if (line4.Length <= 0)
 			{
-				line4 = String.Empty;
+				String line4 = String.Format("{2} X {1} X {3}",
+					part.Code.PadLeft(3, ' '), part.Length, part.Depth, part.Height);
+
+				if (line4.Length <= 0)
+				{
+					line4 = String.Empty;
+				}
+				{
+					graphics.DrawString(line4, Arial8, blackBrush, new XPoint(x, y));
+					y += XUnit.FromMillimeter(5);
+				}
 			}
+
+			String line5 = part.Customer + " " + this.dueDate.ToShortDateString();
+
+			graphics.DrawString(line5, Arial8, blackBrush, new XPoint(x, y));
+			y += XUnit.FromMillimeter(5);
+
+			// String line6 = String.Format("Due date: {0}", this.dueDate.ToShortDateString());
+
+			// graphics.DrawString(line6, Arial8, blackBrush, new XPoint(x, y));
+			// y += XUnit.FromMillimeter(5);
+
+			this.DrawEdgeBinding(graphics, rectangle, part);
+		}
+
+		String GetEdgeBindingString(Decimal d, Boolean horizontal)
+		{
+
+			if (d <= new Decimal(0.5))
 			{
-				g.DrawString(line4, arialLarge, brush, new XPoint(x, y));
-				y += XUnit.FromMillimeter(7);
+				if (d == 0)
+					return String.Empty;
+
+				return d.ToString("0.#") ;
 			}
 
-			String line5 = String.Format("{0} {1}", 
-				Substring(this.customerName, 15),
-				this.customerMobile);
+			if (d <= new Decimal(1.0))
+			{
+				return d.ToString("0.# ") + (horizontal ? "-" : "|");
+			}
 
-			g.DrawString(line5, arial8, brush, new XPoint(x, y));
-			y += XUnit.FromMillimeter(5);
+			return d.ToString("0.# ") + (horizontal ? "=" : "||");
+		}
 
-			String line6 = String.Format("Due date: {0}", this.dueDate);
+		Decimal GetEdgeBinding(String s)
+		{
+			if (String.IsNullOrEmpty(s))
+			{
+				return 0;
+			}
 
-			g.DrawString(line6, arial8, brush, new XPoint(x, y));
-			y += XUnit.FromMillimeter(5);
+			if (!s.StartsWith("PVC"))
+			{
+				return 0;
+			}
 
-			g.DrawRectangle(pen, r);
+			try
+			{
+				return Decimal.Parse(s.Substring(3));
+			}
+			catch (FormatException)
+			{
+				// TODO: Handle error.
+			}
+
+			MessageBox.Show("Invalid edge binding information {0}", s);
+
+			return 0;
+		}
+
+		/// <summary>
+		/// Draws the given part inside the given rectangle.
+		/// </summary>
+		/// <param name="graphics"></param>
+		/// <param name="rectangle">The bounds.</param>
+		/// <param name="part">The part.</param>
+		void DrawEdgeBinding(XGraphics graphics, XRect rectangle, Part part)
+		{
+			double d = 1.5;
+			XUnit vertical = XUnit.FromMillimeter(1);
+			XUnit horizontal = XUnit.FromMillimeter(10);
+			XPoint point;
+			Decimal binding;
+			String bindingLabel;
+
+			rectangle = new XRect(rectangle.X + d, rectangle.Y + d, rectangle.Width + 2 * d, rectangle.Height + 2 * d);
+
+			binding = GetEdgeBinding(part.TopEdgeName);
+			bindingLabel = GetEdgeBindingString(binding, true);
+			point = new XPoint(rectangle.Center.X, rectangle.Top + vertical);
+			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.TopCenter);
+			DrawEdgeBindingLine(graphics, rectangle.TopLeft, rectangle.TopRight, binding);
+
+			binding = GetEdgeBinding(part.BottomEdgeName);
+			bindingLabel = GetEdgeBindingString(binding, true);
+			point = new XPoint(rectangle.Center.X, rectangle.Bottom - vertical);
+			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.BottomCenter);
+			DrawEdgeBindingLine(graphics, rectangle.BottomLeft, rectangle.BottomRight, binding);
+
+
+			binding = GetEdgeBinding(part.LeftEdgeName);
+			bindingLabel = GetEdgeBindingString(binding, true);
+			point = new XPoint(rectangle.Left + horizontal, rectangle.Center.Y);
+			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.Center);
+			DrawEdgeBindingLine(graphics, rectangle.TopLeft, rectangle.BottomLeft, binding);
+
+
+			binding = GetEdgeBinding(part.RightEdgeName);
+			bindingLabel = GetEdgeBindingString(binding, true);
+			point = new XPoint(rectangle.Right - horizontal, rectangle.Center.Y);
+			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.Center);
+			DrawEdgeBindingLine(graphics, rectangle.BottomRight, rectangle.TopRight, binding);
+		}
+
+		void DrawEdgeBindingLine(XGraphics graphics, XPoint p1, XPoint p2, Decimal binding)
+		{
+			double d = 1.5;
+
+			if (binding >= Binding08 && binding <= Binding10)
+			{
+				graphics.DrawLine(PenBlack1pt, p1, p2);
+			}
+			else if (binding > Binding10)
+			{
+				if (p1.X == p2.X)
+				{
+					graphics.DrawLine(PenBlack1pt, p1.X - d, p1.Y, p2.X - d, p2.Y);
+					graphics.DrawLine(PenBlack1pt, p1.X + d, p1.Y, p2.X + d, p2.Y);
+				}
+				else if (p1.Y == p2.Y)
+				{
+					graphics.DrawLine(PenBlack1pt, p1.X, p1.Y - d, p2.X, p2.Y - d);
+					graphics.DrawLine(PenBlack1pt, p1.X, p1.Y + d, p2.X, p2.Y + d);
+				}
+				else
+				{
+					graphics.DrawLine(PenBlack3pt, p1, p2);
+				}
+			}
 		}
 	}
 }

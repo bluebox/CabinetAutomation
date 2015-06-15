@@ -49,7 +49,7 @@ namespace CabinetAutomation.BiesseCabinet
 					{
 						Console.WriteLine("{0}: {1} {2}", p.Code, p.Description, p.Type);
 
-						p.HinshitsuIntelligentGrainRotate();
+						p.HinshitsuIntelligenceSetGrain();
 
 						this.Parts.Add(p);
 					}

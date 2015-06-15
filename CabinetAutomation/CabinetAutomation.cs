@@ -25,6 +25,8 @@ namespace CabinetAutomation
 		public CabinetAutomation()
 		{
 			InitializeComponent();
+
+			this.deliveryDateTimePicker.Value = DateTime.Today.AddDays(7).Date;
 		}
 
 		private void submitButton_Click(object sender, EventArgs e)
@@ -35,49 +37,23 @@ namespace CabinetAutomation
 
 				return;
 			}
-
-			if (this.customerNameTextBox.Text.Length < 4)
-			{
-				MessageBox.Show("Please enter customer name.");
-
-				return;
-			}
-
-			if (this.customerMobileTextBox.Text.Length < 10)
-			{
-				MessageBox.Show("Please enter customer mobile");
-
-				return;
-			}
-
-			if (this.deliveryDateTextBox.Text.Length < 5)
-			{
-				MessageBox.Show("Please enter delivery date.");
-
-				return;
-			}
-
-			this.labelGenerator.customerName = this.customerNameTextBox.Text;
-			this.labelGenerator.customerMobile = this.customerMobileTextBox.Text;
-			this.labelGenerator.dueDate = this.deliveryDateTextBox.Text;
+			this.labelGenerator.dueDate = this.deliveryDateTimePicker.Value;
 
 			String folder = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
-			String pdfFileName = String.Format("{0}-{1}.pdf", this.labelGenerator.customerName, this.labelGenerator.customerMobile);
+			String pdfFileName = String.Format("BarcodeLabels.pdf");
 			
 			this.biesseCncLabelFilePath = Path.Combine(folder, pdfFileName);
 			this.biesseCabinetCsvParser = new CsvParser(biesseCabinetCsvFilePath);
 
 			this.labelGenerator.SaveToPdf(this.biesseCncLabelFilePath, biesseCabinetCsvParser.Parts);
 
-			String beamSawXmlFileNameFormat = String.Format("{0}-{1}-{2}.xml", 
-				this.labelGenerator.customerName, this.labelGenerator.customerMobile, "{0}");
+			String beamSawXmlFileNameFormat = "BeamSaw-{0}.xml";
 
 			this.beamSawXmlFilePathFormat = Path.Combine(folder, beamSawXmlFileNameFormat);
 
 			beamSawXmlGenerator.Generate(biesseCabinetCsvParser.Parts, this.beamSawXmlFilePathFormat);
 
-			// this.openPdfButton_Click(this.openPdfButton, null);
-			// this.openXmlButton_Click(this.openXmlButton, null);
+			this.openPdfButton_Click(this.openPdfFolderButton, null);
 		}
 
 		private void openPdfButton_Click(object sender, EventArgs e)
@@ -92,8 +68,6 @@ namespace CabinetAutomation
 		{
 			if (this.biesseCncLabelFilePath != null)
 			{
-				// String folder = Path.GetDirectoryName(this.labelFilePath);
-
 				System.Diagnostics.Process.Start("explorer", "/select," + this.biesseCncLabelFilePath);
 			}
 		}
