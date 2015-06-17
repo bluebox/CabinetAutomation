@@ -535,9 +535,11 @@ namespace CabinetAutomation.BiesseCabinet
 
 		int IComparable.CompareTo(object obj)
 		{
-			Part p1 = this;
-			Part p2 = obj as Part;
+			return Compare(this, obj as Part);
+		}
 
+		public static Int32 Compare(Part p1, Part p2)
+		{
 			Int32 m1 = String.Compare(p1.Material, p2.Material);
 
 			if (m1 != 0)
@@ -559,6 +561,26 @@ namespace CabinetAutomation.BiesseCabinet
 				if (h1 != 0)
 				{
 					return h1;
+				}
+			}
+
+			if (p1.P.HasValue && p2.P.HasValue)
+			{
+				Int32 d1 = Decimal.Compare(p1.P.Value, p2.P.Value);
+
+				if (d1 != 0)
+				{
+					return d1;
+				}
+			}
+
+			if (p1.L.HasValue && p2.L.HasValue)
+			{
+				Int32 l1 = Decimal.Compare(p1.L.Value, p2.L.Value);
+
+				if (l1 != 0)
+				{
+					return l1;
 				}
 			}
 
