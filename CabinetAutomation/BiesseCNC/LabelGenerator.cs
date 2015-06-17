@@ -73,7 +73,7 @@ namespace CabinetAutomation.BiesseCNC
 		static XPen PenBlack1pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(1));
 		static XPen PenBlack3pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(3));
 		static XFont Arial8 = new XFont("Arial", 8, XFontStyle.Regular);
-		static XFont ArialLarge = new XFont("Arial", 20, XFontStyle.Regular);
+		static XFont ArialLarge = new XFont("Arial", 14, XFontStyle.Regular);
 		static XBrush blackBrush = XBrushes.Black;
 
 		static Decimal Binding00 = new Decimal(0);
@@ -162,7 +162,7 @@ namespace CabinetAutomation.BiesseCNC
 
 					XRect labelRectangle = new XRect(labelOffset, labelSizeAfterMargin);
 
-					this.DrawLabel(graphics, labelRectangle, part);
+					this.DrawLabel(graphics, labelRectangle, part, this.BarcodeFormat);
 
 					Console.WriteLine("{0} {1} {2} {3}", labelRectangle.X, labelRectangle.Y, labelRectangle.Width, labelRectangle.Height);
 				}
@@ -192,7 +192,7 @@ namespace CabinetAutomation.BiesseCNC
 		/// <param name="graphics"></param>
 		/// <param name="rectangle">The bounds.</param>
 		/// <param name="part">The part.</param>
-		private void DrawLabel(XGraphics graphics, XRect rectangle, Part part)
+		private void DrawLabel(XGraphics graphics, XRect rectangle, Part part, Int32 format)
 		{
 			if (part.Length < part.Depth)
 			{
@@ -201,10 +201,28 @@ namespace CabinetAutomation.BiesseCNC
 				part.Rotate();
 			}
 
-
 			XUnit y = rectangle.Top + XUnit.FromMillimeter(5);
 			XUnit x = rectangle.Left + XUnit.FromMillimeter(20);
-			String barcodeText = part.FileCamX;
+			String barcodeText = String.Empty;
+			String barcodeLabel = String.Empty;
+
+			switch (format)
+			{
+				case BiesseCNC.BarcodeFormat.Folder4Filename4:
+					if (!String.IsNullOrEmpty(part.FileCamX))
+					{
+						barcodeText = part.OwnerName.PadRight(4, '-').Substring(0, 4);
+						barcodeText += part.FileCamX.PadRight(4, '-').Substring(0, 4);
+						barcodeLabel = String.Format("{0} / {1}", part.OwnerName, part.FileCamX);
+					}
+					
+					break;
+
+				default:
+					barcodeText = part.FileCamX;
+					barcodeLabel = barcodeText;
+					break;
+			}
 
 			// Extra top space
 			y += XUnit.FromMillimeter(5);
@@ -222,7 +240,7 @@ namespace CabinetAutomation.BiesseCNC
 				y += XUnit.FromPoint(xImage.PointHeight);
 				y += XUnit.FromMillimeter(6);
 
-				graphics.DrawString(barcodeText, Arial8, blackBrush, new XPoint(x, y));
+				graphics.DrawString(barcodeLabel, Arial8, blackBrush, new XPoint(x, y));
 				y += XUnit.FromMillimeter(5);
 			}
 
@@ -272,10 +290,6 @@ namespace CabinetAutomation.BiesseCNC
 			graphics.DrawString(line5, Arial8, blackBrush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);
 
-			// String line6 = String.Format("Due date: {0}", this.dueDate.ToShortDateString());
-
-			// graphics.DrawString(line6, Arial8, blackBrush, new XPoint(x, y));
-			// y += XUnit.FromMillimeter(5);
 
 			this.DrawEdgeBinding(graphics, rectangle, part);
 		}
@@ -288,15 +302,15 @@ namespace CabinetAutomation.BiesseCNC
 				if (d == 0)
 					return String.Empty;
 
-				return d.ToString("0.#") ;
+				return d.ToString("0.# eb") ;
 			}
 
 			if (d <= new Decimal(1.0))
 			{
-				return d.ToString("0.# ") + (horizontal ? "-" : "|");
+				return d.ToString("0.# eb ") + (horizontal ? "-" : "|");
 			}
 
-			return d.ToString("0.# ") + (horizontal ? "=" : "||");
+			return d.ToString("0.# eb") + (horizontal ? "=" : "||");
 		}
 
 		Decimal GetEdgeBinding(String s)
@@ -333,14 +347,14 @@ namespace CabinetAutomation.BiesseCNC
 		/// <param name="part">The part.</param>
 		void DrawEdgeBinding(XGraphics graphics, XRect rectangle, Part part)
 		{
-			double d = 1.5;
+			double d = XUnit.FromMillimeter(3);
 			XUnit vertical = XUnit.FromMillimeter(1);
 			XUnit horizontal = XUnit.FromMillimeter(10);
 			XPoint point;
 			Decimal binding;
 			String bindingLabel;
 
-			rectangle = new XRect(rectangle.X + d, rectangle.Y + d, rectangle.Width + 2 * d, rectangle.Height + 2 * d);
+			rectangle = new XRect(rectangle.X + d, rectangle.Y + d, rectangle.Width - 2 * d, rectangle.Height - 2 * d);
 
 			binding = GetEdgeBinding(part.TopEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
@@ -354,13 +368,11 @@ namespace CabinetAutomation.BiesseCNC
 			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.BottomCenter);
 			DrawEdgeBindingLine(graphics, rectangle.BottomLeft, rectangle.BottomRight, binding);
 
-
 			binding = GetEdgeBinding(part.LeftEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
 			point = new XPoint(rectangle.Left + horizontal, rectangle.Center.Y);
 			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.Center);
 			DrawEdgeBindingLine(graphics, rectangle.TopLeft, rectangle.BottomLeft, binding);
-
 
 			binding = GetEdgeBinding(part.RightEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
