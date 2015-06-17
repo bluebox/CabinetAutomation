@@ -89,6 +89,22 @@ namespace CabinetAutomation.BiesseCabinet
 			return parts;
 		}
 
+		public PartList Multiply(Int32 quantity)
+		{
+			PartList parts = new PartList();
+
+			foreach (Part p in this)
+			{
+				Part copy = p.Clone();
+
+				copy.Quantity *= quantity;
+
+				parts.Add(copy);
+			}
+
+			return parts;
+		}
+
 		public PartList PartsAfterExpanding()
 		{
 			PartList parts = new PartList();

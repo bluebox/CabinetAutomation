@@ -27,6 +27,7 @@ namespace CabinetAutomation
 			InitializeComponent();
 
 			this.deliveryDateTimePicker.Value = DateTime.Today.AddDays(7).Date;
+			this.codeFormatComboBox.SelectedIndex = 0;
 		}
 
 		private void submitButton_Click(object sender, EventArgs e)
@@ -37,7 +38,21 @@ namespace CabinetAutomation
 
 				return;
 			}
-			this.labelGenerator.dueDate = this.deliveryDateTimePicker.Value;
+
+			Int32 quantity = 1;
+
+			try
+			{
+				quantity = Int32.Parse(quantityTextBox.Text.Trim());
+			}
+			catch (FormatException)
+			{
+				MessageBox.Show("Please select a valid quantity.");
+			}
+
+			this.labelGenerator.Quantity = quantity;
+			this.labelGenerator.DueDate = this.deliveryDateTimePicker.Value;
+			this.labelGenerator.BarcodeFormat = BarcodeFormat.Parse(this.codeFormatComboBox.SelectedItem as String);
 
 			String folder = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
 			String pdfFileName = String.Format("BarcodeLabels.pdf");
@@ -51,7 +66,7 @@ namespace CabinetAutomation
 
 			this.beamSawXmlFilePathFormat = Path.Combine(folder, beamSawXmlFileNameFormat);
 
-			beamSawXmlGenerator.Generate(biesseCabinetCsvParser.Parts, this.beamSawXmlFilePathFormat);
+			beamSawXmlGenerator.Generate(quantity, biesseCabinetCsvParser.Parts, this.beamSawXmlFilePathFormat);
 
 			this.openPdfButton_Click(this.openPdfFolderButton, null);
 		}

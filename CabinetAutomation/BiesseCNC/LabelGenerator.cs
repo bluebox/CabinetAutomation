@@ -65,7 +65,9 @@ namespace CabinetAutomation.BiesseCNC
 		public CFMargin PageMargin;
 		public CFMargin LabelMargin;
 
-		public DateTime dueDate = DateTime.Today.AddDays(14);
+		public Int32 Quantity = 1;
+		public DateTime DueDate = DateTime.Today.AddDays(14);
+		public Int32 BarcodeFormat = BiesseCNC.BarcodeFormat.Default;
 
 		static XPen PenLightGray1pt = new XPen(XColor.FromKnownColor(KnownColor.LightGray), XUnit.FromPoint(1));
 		static XPen PenBlack1pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(1));
@@ -89,6 +91,7 @@ namespace CabinetAutomation.BiesseCNC
 
 		public void SaveToPdf(String filePath, PartList parts)
 		{
+			parts = parts.Multiply(this.Quantity);
 			parts = parts.PartsAfterExpanding();
 			parts = parts.PartsWithoutFileCamX();
 			parts.Sort();
@@ -264,7 +267,7 @@ namespace CabinetAutomation.BiesseCNC
 				}
 			}
 
-			String line5 = part.Customer + " " + this.dueDate.ToShortDateString();
+			String line5 = part.Customer + " " + this.DueDate.ToShortDateString();
 
 			graphics.DrawString(line5, Arial8, blackBrush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);

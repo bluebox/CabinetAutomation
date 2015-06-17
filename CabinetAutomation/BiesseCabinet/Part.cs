@@ -436,7 +436,7 @@ namespace CabinetAutomation.BiesseCabinet
 			p.TopEdgeName = parts[24];
 			p.RightEdgeName = parts[25];
 			p.BottomEdgeName = parts[26];
-			p.TopEdgeName = parts[27];
+			p.LeftEdgeName = parts[27];
 
 			if (parts.Length > 32 && null != parts[32])
 			{

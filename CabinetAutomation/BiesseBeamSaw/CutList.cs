@@ -22,7 +22,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 		public CutList(Decimal thickness, PartList parts)
 		{
-			parts = parts.PartsAfterExpanding().PartsAfterFilter(thickness);
+			parts = parts.PartsAfterFilter(thickness);
 			parts.Sort();
 
 			this.parts = new List<BeamSawPart>();
@@ -85,7 +85,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 		public String W;
 
 		[XmlAttribute]
-		public String qMin = "1";
+		public Int32 qMin = 1;
 
 		[XmlAttribute]
 		public String Grain = "0";
@@ -125,11 +125,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 				this.IIDesc = part.FileCamX;
 			}
 
-			///
-			/// TODO: This is under the assumption that
-			/// the parts list is expanded.
-			/// 
-			this.qMin = "1";
+			this.qMin = part.Quantity;
 		}
 
 		public XmlElement MakeTree(XmlDocument document)
@@ -141,10 +137,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 			c.SetAttribute("W", this.W);
 			c.SetAttribute("Grain", this.Grain);
 
-			if (!String.IsNullOrEmpty(this.qMin))
-			{
-				c.SetAttribute("qMin", this.qMin);
-			}
+			c.SetAttribute("qMin", this.qMin.ToString());
 
 			if (!String.IsNullOrEmpty(this.IDesc))
 			{
