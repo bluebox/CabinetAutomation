@@ -19,7 +19,7 @@ namespace CabinetAutomation.BiesseCNC
 		{
 			get
 			{
-				return BarcodeFormat.FullFilename;
+				return BarcodeFormat.Folder4Filename4;
 			}
 		}
 

@@ -207,7 +207,7 @@ namespace CabinetAutomation.BiesseCNC
 				y += XUnit.FromPoint(xImage.PointHeight);
 				y += XUnit.FromMillimeter(6);
 
-				graphics.DrawString(barcodeLabel, Arial8, blackBrush, new XPoint(x, y));
+				graphics.DrawString(barcodeText, Arial8, blackBrush, new XPoint(x, y));
 				y += XUnit.FromMillimeter(5);
 			}
 
@@ -247,7 +247,8 @@ namespace CabinetAutomation.BiesseCNC
 					line4 = String.Empty;
 				}
 				{
-					graphics.DrawString(line4, Arial8, blackBrush, new XPoint(x, y));
+					y += XUnit.FromMillimeter(2);
+					graphics.DrawString(line4, ArialLarge, blackBrush, new XPoint(x, y));
 					y += XUnit.FromMillimeter(5);
 				}
 			}
