@@ -58,17 +58,18 @@ namespace CabinetAutomation
 			this.labelGenerator.DueDate = this.deliveryDateTimePicker.Value;
 			this.labelGenerator.barcodeFormat = BarcodeFormat.Parse(this.codeFormatComboBox.SelectedItem as String);
 
-			String folder = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
-			String pdfFileName = String.Format("BarcodeLabels.pdf");
+			String csvFolderName = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
+			String csvFileNameWithoutExtension = Path.GetFileNameWithoutExtension(this.biesseCabinetCsvFilePath);
+			String pdfFileName = String.Format("{0}-BarcodeLabels.pdf", csvFileNameWithoutExtension);
 			
-			this.biesseCncLabelFilePath = Path.Combine(folder, pdfFileName);
+			this.biesseCncLabelFilePath = Path.Combine(csvFolderName, pdfFileName);
 			this.biesseCabinetCsvParser = new CsvParser(biesseCabinetCsvFilePath);
 
 			this.labelGenerator.SaveToPdf(this.biesseCncLabelFilePath, biesseCabinetCsvParser.Parts);
 
-			String beamSawXmlFileNameFormat = "BeamSaw-{0}.xml";
+			String beamSawXmlFileNameFormat = String.Format("{0}-BeamSaw-{1}.xml", csvFileNameWithoutExtension, "{0}");
 
-			this.beamSawXmlFilePathFormat = Path.Combine(folder, beamSawXmlFileNameFormat);
+			this.beamSawXmlFilePathFormat = Path.Combine(csvFolderName, beamSawXmlFileNameFormat);
 
 			beamSawXmlGenerator.Generate(quantity, biesseCabinetCsvParser.Parts, grainType, this.beamSawXmlFilePathFormat);
 
