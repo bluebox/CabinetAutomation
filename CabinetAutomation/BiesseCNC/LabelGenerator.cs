@@ -8,55 +8,20 @@ using PdfSharp.Drawing;
 using System.Drawing;
 using CabinetAutomation.BiesseCabinet;
 using System.Windows.Forms;
+using CabinetAutomation.BiesseBeamSaw;
 
 namespace CabinetAutomation.BiesseCNC
 {
-	public class CFSize
-	{
-		public static XSize A4 = CFSize.FromMillimeter(210, 297);
-		public static XSize Letter = CFSize.FromMillimeter(210, 279.4);
-		public static XSize Legal = CFSize.FromMillimeter(210, 215.9);
-
-		public static XSize FromMillimeter(Double width, Double height)
-		{
-			XSize size = new XSize();
-
-			size.Width = XUnit.FromMillimeter(width);
-			size.Height = XUnit.FromMillimeter(height);
-
-			return size;
-		}
-	}
-
-	public class CFMargin {
-		public XUnit Top;
-		public XUnit Bottom;
-		public XUnit Left;
-		public XUnit Right;
-
-		/// <summary>
-		/// Creates a margin object with m millimeter margin on 
-		/// all side.
-		/// </summary>
-		/// <param name="m">Margin in millimeter</param>
-		public CFMargin(Double m)
-		{
-			this.Top = this.Bottom = this.Left = this.Right = XUnit.FromMillimeter(m);
-		}
-
-		public CFMargin(Double vertical, Double horizontal)
-		{
-			this.Top = this.Bottom = XUnit.FromMillimeter(vertical);
-			this.Left = this.Right = XUnit.FromMillimeter(horizontal);
-		}
-	}
-
 	/// <summary>
 	/// Given an array of parts, This will generate barcode labels.
 	/// with pdf.
 	/// </summary>
 	public class LabelGenerator
 	{
+		public static XSize A4 = new XSize(XUnit.FromMillimeter(210), XUnit.FromMillimeter(297));
+		public static XSize Letter = new XSize(XUnit.FromMillimeter(210), XUnit.FromMillimeter(279.4));
+		public static XSize Legal = new XSize(XUnit.FromMillimeter(210), XUnit.FromMillimeter(215.9));
+
 		public XSize PageSize;
 
 		public Int32 RowPerPage = 4;
@@ -67,7 +32,9 @@ namespace CabinetAutomation.BiesseCNC
 
 		public Int32 Quantity = 1;
 		public DateTime DueDate = DateTime.Today.AddDays(14);
-		public Int32 BarcodeFormat = BiesseCNC.BarcodeFormat.Default;
+		public Int32 barcodeFormat = BiesseCNC.BarcodeFormat.Default;
+		public Int32 grainType = GrainType.Default;
+		public Boolean edgeBinding = false;
 
 		static XPen PenLightGray1pt = new XPen(XColor.FromKnownColor(KnownColor.LightGray), XUnit.FromPoint(1));
 		static XPen PenBlack1pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(1));
@@ -84,7 +51,7 @@ namespace CabinetAutomation.BiesseCNC
 
 		public LabelGenerator()
 		{
-			this.PageSize = CFSize.A4;
+			this.PageSize = A4;
 			this.PageMargin = new CFMargin(5);
 			this.LabelMargin = new CFMargin(5);
 		}
@@ -162,7 +129,7 @@ namespace CabinetAutomation.BiesseCNC
 
 					XRect labelRectangle = new XRect(labelOffset, labelSizeAfterMargin);
 
-					this.DrawLabel(graphics, labelRectangle, part, this.BarcodeFormat);
+					this.DrawLabel(graphics, labelRectangle, part, this.barcodeFormat);
 
 					Console.WriteLine("{0} {1} {2} {3}", labelRectangle.X, labelRectangle.Y, labelRectangle.Width, labelRectangle.Height);
 				}
@@ -215,7 +182,7 @@ namespace CabinetAutomation.BiesseCNC
 						barcodeText += part.FileCamX.PadRight(4, '-').Substring(0, 4);
 						barcodeLabel = String.Format("{0} / {1}", part.OwnerName, part.FileCamX);
 					}
-					
+
 					break;
 
 				default:
@@ -244,7 +211,7 @@ namespace CabinetAutomation.BiesseCNC
 				y += XUnit.FromMillimeter(5);
 			}
 
-			String line1 = String.Format("{0} - {1} - {2}", 
+			String line1 = String.Format("{0} - {1} - {2}",
 				part.Code, Substring(part.Description, 20), Substring(part.Type, 20));
 
 			graphics.DrawString(line1, Arial8, blackBrush, new XPoint(x, y));
@@ -258,8 +225,8 @@ namespace CabinetAutomation.BiesseCNC
 				y += XUnit.FromMillimeter(5);
 			}
 
-			String line3 = String.Format("{0} {1} {2}", 
-				Substring(part.Grain, 15), Substring(part.Colour, 15), 
+			String line3 = String.Format("{0} {1} {2}",
+				Substring(part.Grain, 15), Substring(part.Colour, 15),
 				Substring(part.Material, 15));
 
 			if (line3.Length <= 0)
@@ -291,7 +258,10 @@ namespace CabinetAutomation.BiesseCNC
 			y += XUnit.FromMillimeter(5);
 
 
-			this.DrawEdgeBinding(graphics, rectangle, part);
+			if (this.edgeBinding)
+			{
+				this.DrawEdgeBinding(graphics, rectangle, part);
+			}
 		}
 
 		String GetEdgeBindingString(Decimal d, Boolean horizontal)
