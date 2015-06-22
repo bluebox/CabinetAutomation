@@ -18,11 +18,13 @@ namespace CabinetAutomation.BiesseBeamSaw
 		[XmlAttribute]
 		public String NBoards = "1";
 
+		public BoardType BoardType;
 		public List<BeamSawPart> parts;
 
-		public CutList(Decimal thickness, PartList parts)
+		public CutList(BoardType boardType, PartList parts)
 		{
-			parts = parts.PartsAfterFilter(thickness);
+			this.BoardType = boardType;
+			parts = parts.PartsAfterFilter(boardType);
 			parts.Sort();
 
 			this.parts = new List<BeamSawPart>();
@@ -30,12 +32,6 @@ namespace CabinetAutomation.BiesseBeamSaw
 			for (int i = 0; i < parts.Count; i++)
 			{
 				Part part = parts[i];
-
-				if (!part.Height.HasValue || !thickness.Equals(part.Height))
-				{
-					continue;
-				}
-
 				BeamSawPart beamSawPart = new BeamSawPart(part);
 
 				beamSawPart.id = String.Format("P{0}", i + 1);
@@ -46,7 +42,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 			this.NParts = this.parts.Count.ToString();
 		}
 
-		public XmlElement MakeTree(XmlDocument document, Decimal thickness)
+		public XmlElement MakeTree(XmlDocument document)
 		{
 			XmlElement c = document.CreateElement("CutList");
 
@@ -62,7 +58,8 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 			Board board = new Board();
 
-			board.Thickness = thickness.ToString();
+			board.BoardType = this.BoardType;
+			board.Thickness = this.BoardType.Thickness.ToString();
 			c.AppendChild(board.MakeTree(document));
 			document.AppendChild(c);
 
@@ -180,6 +177,8 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 		[XmlAttribute]
 		public String Stock = "0";
+
+		public BoardType BoardType;
 
 		public XmlElement MakeTree(XmlDocument document)
 		{

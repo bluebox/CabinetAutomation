@@ -17,17 +17,14 @@ namespace CabinetAutomation.BiesseBeamSaw
 		{
 			parts = parts.Multiply(quantity);
 			
-			HashSet<Decimal> thicknessValues = parts.ThicknessValues;
-			HashSet<BoardType> boardTypes = parts.BoardTypes;
-
-			foreach (Decimal thickness in thicknessValues)
+			foreach (BoardType boardType in parts.BoardTypes)
 			{
-				String outputFilePath = String.Format(outputFilePathFormat, thickness);
-				CutList cutList = new CutList(thickness, parts);
+				String outputFilePath = String.Format(outputFilePathFormat, boardType);
+				CutList cutList = new CutList(boardType, parts);
 
 				XmlDocument document = new XmlDocument();
 
-				cutList.MakeTree(document, thickness);
+				cutList.MakeTree(document);
 
 				var settings = new XmlWriterSettings
 				{

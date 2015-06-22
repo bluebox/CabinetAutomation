@@ -38,35 +38,19 @@ namespace CabinetAutomation.BiesseCabinet
 			}			
 		}
 
-		public HashSet<Decimal> ThicknessValues
-		{
-			get
-			{
-				HashSet<Decimal> values = new HashSet<Decimal>();
-
-				foreach (Part p in this)
-				{
-					if (p.H.HasValue)
-					{
-						values.Add(p.H.Value);
-					}
-				}
-
-				return values;
-			}
-		}
-
 		public HashSet<BoardType> BoardTypes
 		{
 			get
 			{
-				HashSet<BoardType> boardTypes = new HashSet<BoardType>();
+				HashSet<BoardType> boardTypes = new HashSet<BoardType>(new BoardType(String.Empty, String.Empty, 0));
 
 				foreach (Part p in this)
 				{
-					if (p.H.HasValue)
+					BoardType boardType = p.BoardType;
+
+					if (p.H.HasValue && !boardTypes.Contains<BoardType>(boardType))
 					{
-						boardTypes.Add(p.BoardType);
+						boardTypes.Add(boardType);
 					}
 				}
 
@@ -83,6 +67,23 @@ namespace CabinetAutomation.BiesseCabinet
 			foreach (Part p in this)
 			{
 				if (p.H.HasValue && p.H.Value == thickness)
+				{
+					parts.Add(new Part(p));
+				}
+			}
+
+			return parts;
+		}
+
+		public PartList PartsAfterFilter(BoardType boardType)
+		{
+			PartList parts = new PartList();
+
+			parts.expanded = this.expanded;
+
+			foreach (Part p in this)
+			{
+				if (p.H.HasValue && p.BoardType.Equals(boardType))
 				{
 					parts.Add(new Part(p));
 				}

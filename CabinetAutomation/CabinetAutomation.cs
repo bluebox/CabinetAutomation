@@ -96,11 +96,9 @@ namespace CabinetAutomation
 		{
 			if (this.beamSawXmlFilePathFormat != null)
 			{
-				HashSet<Decimal> thicknessValues = this.biesseCabinetCsvParser.Parts.ThicknessValues;
-
-				foreach (Decimal thickness in thicknessValues)
+				foreach (BoardType boardType in this.biesseCabinetCsvParser.Parts.BoardTypes)
 				{
-					String beamSawXmlFilePath = String.Format(beamSawXmlFilePathFormat, thickness);
+					String beamSawXmlFilePath = String.Format(beamSawXmlFilePathFormat, boardType);
 					
 					System.Diagnostics.Process.Start(beamSawXmlFilePath);
 				}
