@@ -29,6 +29,8 @@
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.edgeBindingCheckBox = new System.Windows.Forms.CheckBox();
+			this.label8 = new System.Windows.Forms.Label();
 			this.grainComboBox = new System.Windows.Forms.ComboBox();
 			this.label7 = new System.Windows.Forms.Label();
 			this.codeFormatComboBox = new System.Windows.Forms.ComboBox();
@@ -47,8 +49,6 @@
 			this.submitButton = new System.Windows.Forms.Button();
 			this.label3 = new System.Windows.Forms.Label();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-			this.label8 = new System.Windows.Forms.Label();
-			this.edgeBindingCheckBox = new System.Windows.Forms.CheckBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -78,14 +78,35 @@
 			this.panel1.Size = new System.Drawing.Size(369, 410);
 			this.panel1.TabIndex = 1;
 			// 
+			// edgeBindingCheckBox
+			// 
+			this.edgeBindingCheckBox.AutoSize = true;
+			this.edgeBindingCheckBox.Checked = true;
+			this.edgeBindingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+			this.edgeBindingCheckBox.Location = new System.Drawing.Point(128, 115);
+			this.edgeBindingCheckBox.Name = "edgeBindingCheckBox";
+			this.edgeBindingCheckBox.Size = new System.Drawing.Size(15, 14);
+			this.edgeBindingCheckBox.TabIndex = 22;
+			this.edgeBindingCheckBox.UseVisualStyleBackColor = true;
+			// 
+			// label8
+			// 
+			this.label8.AutoSize = true;
+			this.label8.Location = new System.Drawing.Point(3, 116);
+			this.label8.Name = "label8";
+			this.label8.Size = new System.Drawing.Size(69, 13);
+			this.label8.TabIndex = 21;
+			this.label8.Text = "Edge binding";
+			// 
 			// grainComboBox
 			// 
 			this.grainComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.grainComboBox.FormattingEnabled = true;
 			this.grainComboBox.Items.AddRange(new object[] {
-            "Filename",
-            "Folder - Filename"});
-			this.grainComboBox.Location = new System.Drawing.Point(128, 60);
+            "Automatic",
+            "Long edge",
+            "None"});
+			this.grainComboBox.Location = new System.Drawing.Point(128, 87);
 			this.grainComboBox.Name = "grainComboBox";
 			this.grainComboBox.Size = new System.Drawing.Size(200, 21);
 			this.grainComboBox.TabIndex = 20;
@@ -104,10 +125,9 @@
 			this.codeFormatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
 			this.codeFormatComboBox.FormattingEnabled = true;
 			this.codeFormatComboBox.Items.AddRange(new object[] {
-            "Automatic",
-            "Long edge",
-            "None"});
-			this.codeFormatComboBox.Location = new System.Drawing.Point(128, 87);
+            "Filename",
+            "Folder - Filename"});
+			this.codeFormatComboBox.Location = new System.Drawing.Point(128, 60);
 			this.codeFormatComboBox.Name = "codeFormatComboBox";
 			this.codeFormatComboBox.Size = new System.Drawing.Size(200, 21);
 			this.codeFormatComboBox.TabIndex = 18;
@@ -248,24 +268,6 @@
 			this.openFileDialog1.InitialDirectory = ".";
 			this.openFileDialog1.RestoreDirectory = true;
 			this.openFileDialog1.Title = "Open Biesse Cabinet output (CSV)";
-			// 
-			// label8
-			// 
-			this.label8.AutoSize = true;
-			this.label8.Location = new System.Drawing.Point(3, 116);
-			this.label8.Name = "label8";
-			this.label8.Size = new System.Drawing.Size(69, 13);
-			this.label8.TabIndex = 21;
-			this.label8.Text = "Edge binding";
-			// 
-			// edgeBindingCheckBox
-			// 
-			this.edgeBindingCheckBox.AutoSize = true;
-			this.edgeBindingCheckBox.Location = new System.Drawing.Point(128, 115);
-			this.edgeBindingCheckBox.Name = "edgeBindingCheckBox";
-			this.edgeBindingCheckBox.Size = new System.Drawing.Size(15, 14);
-			this.edgeBindingCheckBox.TabIndex = 22;
-			this.edgeBindingCheckBox.UseVisualStyleBackColor = true;
 			// 
 			// CabinetAutomation
 			// 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CabinetAutomation.BiesseBeamSaw;
 
 namespace CabinetAutomation.BiesseCabinet
 {
@@ -45,13 +46,31 @@ namespace CabinetAutomation.BiesseCabinet
 
 				foreach (Part p in this)
 				{
-					if (p.Height.HasValue)
+					if (p.H.HasValue)
 					{
-						values.Add(p.Height.Value);
+						values.Add(p.H.Value);
 					}
 				}
 
 				return values;
+			}
+		}
+
+		public HashSet<BoardType> BoardTypes
+		{
+			get
+			{
+				HashSet<BoardType> boardTypes = new HashSet<BoardType>();
+
+				foreach (Part p in this)
+				{
+					if (p.H.HasValue)
+					{
+						boardTypes.Add(p.BoardType);
+					}
+				}
+
+				return boardTypes;
 			}
 		}
 

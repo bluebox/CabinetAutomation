@@ -44,7 +44,6 @@ namespace CabinetAutomation.BiesseBeamSaw
 			}
 
 			this.NParts = this.parts.Count.ToString();
-
 		}
 
 		public XmlElement MakeTree(XmlDocument document, Decimal thickness)

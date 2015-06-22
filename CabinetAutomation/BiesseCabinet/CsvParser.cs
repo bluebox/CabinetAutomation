@@ -55,7 +55,7 @@ namespace CabinetAutomation.BiesseCabinet
 					{
 						Console.WriteLine("{0}: {1} {2}", p.Code, p.Description, p.Type);
 
-						p.HinshitsuIntelligenceSetGrain();
+						// p.HinshitsuIntelligenceSetGrain();
 
 						this.Parts.Add(p);
 					}
@@ -197,10 +197,10 @@ namespace CabinetAutomation.BiesseCabinet
 				return null;
 			}
 
-			p.BordoSopra = columns[18];
-			p.BordoDestro = columns[19];
-			p.BordoSotto = columns[20];
-			p.BordoSinistro = columns[21];
+			//p.BordoSopra = columns[18];
+			//p.BordoDestro = columns[19];
+			//p.BordoSotto = columns[20];
+			//p.BordoSinistro = columns[21];
 
 			p.Customer = columns[22];
 			p.BloccoAppartenenza = columns[23];

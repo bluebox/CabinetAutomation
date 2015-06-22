@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BarcodeGenerator.cs" />
+    <Compile Include="BiesseBeamSaw\BoardType.cs" />
     <Compile Include="BiesseBeamSaw\GrainType.cs" />
     <Compile Include="BiesseBeamSaw\XmlGenerator.cs" />
     <Compile Include="BiesseCabinet\CsvParser.cs" />

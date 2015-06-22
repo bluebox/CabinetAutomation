@@ -52,7 +52,7 @@ namespace CabinetAutomation.BiesseCNC
 		public LabelGenerator()
 		{
 			this.PageSize = A4;
-			this.PageMargin = new CFMargin(5);
+			this.PageMargin = new CFMargin(10, 5);
 			this.LabelMargin = new CFMargin(5);
 		}
 
@@ -161,6 +161,20 @@ namespace CabinetAutomation.BiesseCNC
 		/// <param name="part">The part.</param>
 		private void DrawLabel(XGraphics graphics, XRect rectangle, Part part, Int32 format)
 		{
+			if (Part.PartsWithStickerOnGoodSide.Contains(part.Name))
+			{
+				part = part.Clone();
+
+				part.MirrorVertically();
+			}
+			else
+			{
+				if (!Part.PartsWithStickerOnBadSide.Contains(part.Name))
+				{
+					MessageBox.Show(String.Format("Part: {0} Sticker logic not defined. Assuming sticker goes to white/inner side.", part.Name), part.Name);
+				}
+			}
+
 			if (part.Length < part.Depth)
 			{
 				part = part.Clone();
@@ -247,9 +261,9 @@ namespace CabinetAutomation.BiesseCNC
 					line4 = String.Empty;
 				}
 				{
-					y += XUnit.FromMillimeter(2);
+					y += XUnit.FromMillimeter(0);
 					graphics.DrawString(line4, ArialLarge, blackBrush, new XPoint(x, y));
-					y += XUnit.FromMillimeter(5);
+					y += XUnit.FromMillimeter(3);
 				}
 			}
 
@@ -291,12 +305,12 @@ namespace CabinetAutomation.BiesseCNC
 				return 0;
 			}
 
-			if (!s.StartsWith("PVC"))
+			if (!s.StartsWith("PVC") && !s.StartsWith("XMD"))
 			{
 				return 0;
 			}
 
-			try
+			try 
 			{
 				return Decimal.Parse(s.Substring(3));
 			}
@@ -330,25 +344,25 @@ namespace CabinetAutomation.BiesseCNC
 			binding = GetEdgeBinding(part.TopEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
 			point = new XPoint(rectangle.Center.X, rectangle.Top + vertical);
-			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.TopCenter);
+			graphics.DrawString(bindingLabel, Arial8, blackBrush, point, XStringFormats.TopCenter);
 			DrawEdgeBindingLine(graphics, rectangle.TopLeft, rectangle.TopRight, binding);
 
 			binding = GetEdgeBinding(part.BottomEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
 			point = new XPoint(rectangle.Center.X, rectangle.Bottom - vertical);
-			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.BottomCenter);
+			graphics.DrawString(bindingLabel, Arial8, blackBrush, point, XStringFormats.BottomCenter);
 			DrawEdgeBindingLine(graphics, rectangle.BottomLeft, rectangle.BottomRight, binding);
 
 			binding = GetEdgeBinding(part.LeftEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
 			point = new XPoint(rectangle.Left + horizontal, rectangle.Center.Y);
-			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.Center);
+			graphics.DrawString(bindingLabel, Arial8, blackBrush, point, XStringFormats.Center);
 			DrawEdgeBindingLine(graphics, rectangle.TopLeft, rectangle.BottomLeft, binding);
 
 			binding = GetEdgeBinding(part.RightEdgeName);
 			bindingLabel = GetEdgeBindingString(binding, true);
 			point = new XPoint(rectangle.Right - horizontal, rectangle.Center.Y);
-			graphics.DrawString(bindingLabel, ArialLarge, blackBrush, point, XStringFormats.Center);
+			graphics.DrawString(bindingLabel, Arial8, blackBrush, point, XStringFormats.Center);
 			DrawEdgeBindingLine(graphics, rectangle.BottomRight, rectangle.TopRight, binding);
 		}
 

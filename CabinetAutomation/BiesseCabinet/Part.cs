@@ -2,11 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CabinetAutomation.BiesseBeamSaw;
 
 namespace CabinetAutomation.BiesseCabinet
 {
 	public class Part : IComparable, ICloneable
 	{
+		/// <summary>
+		/// Bad side back side of the board.
+		/// The `bad` side is the white / inner side.
+		/// The `good` side may have color or finish or may be white.
+		/// </summary>
+		public static List<String> PartsWithStickerOnBadSide = new List<String>(new String[]{
+			"TOP PANEL",
+			"BOTTOM",
+			"HORIZONTAL PARTITION",
+//			"HORIZONTAL CENTRAL RAIL",
+			"VERTICAL PARTITION", // Both side is bad/inner.
+			"BACK PANEL", // No edge or machining.
+			"LEFT LATERAL SIDE",
+			"RIGHT LATERAL SIDE",
+			"TOP STRETCHER",
+		});
+
+		public static List<String> PartsWithStickerOnGoodSide = new List<String>(new String[]{
+			"SHELF",
+			"FRONT TOE KICK",
+		});
+
 		public String Code = String.Empty;
 
 		public String CodePadded
@@ -177,106 +200,106 @@ namespace CabinetAutomation.BiesseCabinet
 
 		public Int32 Quantity;
 
-		/// <summary>
-		/// -L in cm.
-		/// </summary>
-		public Decimal? L2;
+		///// <summary>
+		///// -L in cm.
+		///// </summary>
+		//public Decimal? L2;
 
-		/// <summary>
-		/// -H in cm.
-		/// </summary>
-		public Decimal? H2;
+		///// <summary>
+		///// -H in cm.
+		///// </summary>
+		//public Decimal? H2;
 
-		/// <summary>
-		/// -P in cm.
-		/// </summary>
-		public Decimal? P2;
+		///// <summary>
+		///// -P in cm.
+		///// </summary>
+		//public Decimal? P2;
 
 		public String OwnerName = String.Empty;
 
-		/// <summary>
-		/// BordoSopra = BoardTop
-		/// </summary>
-		public String BordoSopra;
+		///// <summary>
+		///// BordoSopra = BoardTop
+		///// </summary>
+		//public String BordoSopra;
 
-		/// <summary>
-		/// BordoSopra = BoardTop
-		/// </summary>
-		public String BoardTop
-		{
-			get
-			{
-				return BordoSopra;
-			}
+		///// <summary>
+		///// BordoSopra = BoardTop
+		///// </summary>
+		//public String BoardTop
+		//{
+		//    get
+		//    {
+		//        return BordoSopra;
+		//    }
 
-			set
-			{
-				this.BordoSopra = value;
-			}
-		}
+		//    set
+		//    {
+		//        this.BordoSopra = value;
+		//    }
+		//}
 
-		/// <summary>
-		/// BordoDestro = BoardRight
-		/// </summary>
-		public String BordoDestro;
+		///// <summary>
+		///// BordoDestro = BoardRight
+		///// </summary>
+		//public String BordoDestro;
 
-		/// <summary>
-		/// BordoDestro = BoardRight
-		/// </summary>
-		public String BoardRight
-		{
-			get
-			{
-				return this.BordoDestro;
-			}
+		///// <summary>
+		///// BordoDestro = BoardRight
+		///// </summary>
+		//public String BoardRight
+		//{
+		//    get
+		//    {
+		//        return this.BordoDestro;
+		//    }
 
-			set
-			{
-				this.BordoDestro = value;
-			}
-		}
+		//    set
+		//    {
+		//        this.BordoDestro = value;
+		//    }
+		//}
 
-		/// <summary>
-		/// BordoSotto = BoardBellow
-		/// </summary>
-		public String BordoSotto;
+		///// <summary>
+		///// BordoSotto = BoardBellow
+		///// </summary>
+		//public String BordoSotto;
 
-		/// <summary>
-		/// BordoSotto = BoardBellow
-		/// </summary>
-		public String BoardBellow
-		{
-			get
-			{
-				return this.BordoSotto;
-			}
+		///// <summary>
+		///// BordoSotto = BoardBellow
+		///// </summary>
+		//public String BoardBellow
+		//{
+		//    get
+		//    {
+		//        return this.BordoSotto;
+		//    }
 
-			set
-			{
-				this.BordoSotto = value;
-			}
-		}
+		//    set
+		//    {
+		//        this.BordoSotto = value;
+		//    }
+		//}
 
-		/// <summary>
-		/// BordoSinistro = BoardLeft
-		/// </summary>
-		public String BordoSinistro;
+		///// <summary>
+		///// BordoSinistro = BoardLeft
+		///// </summary>
+		//public String BordoSinistro;
 
-		/// <summary>
-		/// BordoSinistro = BoardLeft
-		/// </summary>
-		public String BoardLeft
-		{
-			get
-			{
-				return this.BordoSinistro;
-			}
+		///// <summary>
+		///// BordoSinistro = BoardLeft
+		///// </summary>
+		//public String BoardLeft
+		//{
+		//    get
+		//    {
+		//        return this.BordoSinistro;
+		//    }
 
-			set
-			{
-				this.BordoSinistro = value;
-			}
-		}
+		//    set
+		//    {
+		//        this.BordoSinistro = value;
+		//    }
+		//}
 
 		public String Customer;
 		public String BloccoAppartenenza;
@@ -305,13 +328,13 @@ namespace CabinetAutomation.BiesseCabinet
 			this.FileCam1 = p.FileCam1;
 			this.FileCam2 = p.FileCam2;
 			this.Quantity = p.Quantity;
-			this.L2 = p.L2;
-			this.H2 = p.H2;
-			this.P2 = p.P2;
-			this.BordoSopra = p.BordoSopra;
-			this.BordoDestro = p.BordoDestro;
-			this.BordoSotto = p.BordoSotto;
-			this.BordoSinistro = p.BordoSinistro;
+			//this.L2 = p.L2;
+			//this.H2 = p.H2;
+			//this.P2 = p.P2;
+			//this.BordoSopra = p.BordoSopra;
+			//this.BordoDestro = p.BordoDestro;
+			//this.BordoSotto = p.BordoSotto;
+			//this.BordoSinistro = p.BordoSinistro;
 			this.Customer = p.Customer;
 			this.BloccoAppartenenza = p.BloccoAppartenenza;
 			this.TopEdgeName = p.TopEdgeName;
@@ -319,6 +342,14 @@ namespace CabinetAutomation.BiesseCabinet
 			this.BottomEdgeName = p.BottomEdgeName;
 			this.LeftEdgeName = p.LeftEdgeName;
 			this.OwnerName = p.OwnerName;
+		}
+
+		public BoardType BoardType
+		{
+			get
+			{
+				return new BoardType(this.Material, this.Colour, this.H.Value);
+			}
 		}
 
 		/// <summary>
@@ -333,21 +364,21 @@ namespace CabinetAutomation.BiesseCabinet
 				this.P = temp;
 			}
 
-			{
-				Decimal? temp = this.L2;
+			//{
+			//    Decimal? temp = this.L2;
 
-				this.L2 = this.P2;
-				this.P2 = temp;
-			}
+			//    this.L2 = this.P2;
+			//    this.P2 = temp;
+			//}
 
-			{
-				String temp = this.BoardTop;
+			//{
+			//    String temp = this.BoardTop;
 
-				this.BoardTop = this.BoardRight;
-				this.BoardRight = this.BoardBellow;
-				this.BoardBellow = this.BoardLeft;
-				this.BoardLeft = temp;
-			}
+			//    this.BoardTop = this.BoardRight;
+			//    this.BoardRight = this.BoardBellow;
+			//    this.BoardBellow = this.BoardLeft;
+			//    this.BoardLeft = temp;
+			//}
 
 			{
 				String temp = this.TopEdgeName;
@@ -357,6 +388,16 @@ namespace CabinetAutomation.BiesseCabinet
 				this.BottomEdgeName = this.LeftEdgeName;
 				this.LeftEdgeName = temp;
 			}
+		}
+
+		/// <summary>
+		/// Mirror the part across a vertical mirror.
+		/// </summary>
+		public void MirrorVertically()
+		{
+			String temp = this.LeftEdgeName;
+			this.LeftEdgeName = this.RightEdgeName;
+			this.RightEdgeName = temp;
 		}
 
 		/// <summary>
@@ -391,7 +432,7 @@ namespace CabinetAutomation.BiesseCabinet
 				return String.Empty;
 			}
 
-			if (!s.StartsWith("PVC"))
+			if (!s.StartsWith("PVC") && !s.StartsWith("XMD"))
 			{
 				return String.Empty;
 			}

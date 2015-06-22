@@ -11,11 +11,14 @@ namespace CabinetAutomation.BiesseBeamSaw
 {
 	public class XmlGenerator
 	{
+
+
 		public void Generate(Int32 quantity, PartList parts, Int32 grainType, String outputFilePathFormat)
 		{
 			parts = parts.Multiply(quantity);
 			
 			HashSet<Decimal> thicknessValues = parts.ThicknessValues;
+			HashSet<BoardType> boardTypes = parts.BoardTypes;
 
 			foreach (Decimal thickness in thicknessValues)
 			{
