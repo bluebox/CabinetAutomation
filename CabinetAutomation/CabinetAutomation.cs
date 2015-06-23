@@ -65,13 +65,16 @@ namespace CabinetAutomation
 			this.biesseCncLabelFilePath = Path.Combine(csvFolderName, pdfFileName);
 			this.biesseCabinetCsvParser = new CsvParser(biesseCabinetCsvFilePath);
 
-			this.labelGenerator.SaveToPdf(this.biesseCncLabelFilePath, biesseCabinetCsvParser.Parts);
+			this.labelGenerator.SaveToPdf(this.biesseCncLabelFilePath, biesseCabinetCsvParser.Parts.Clone());
 
 			String beamSawXmlFileNameFormat = String.Format("{0}-BeamSaw-{1}.xml", csvFileNameWithoutExtension, "{0}");
 
 			this.beamSawXmlFilePathFormat = Path.Combine(csvFolderName, beamSawXmlFileNameFormat);
 
-			beamSawXmlGenerator.Generate(quantity, biesseCabinetCsvParser.Parts, grainType, this.beamSawXmlFilePathFormat);
+			this.beamSawXmlGenerator.parts = biesseCabinetCsvParser.Parts.Clone();
+			this.beamSawXmlGenerator.Quantity = quantity;
+
+			beamSawXmlGenerator.Generate(this.beamSawXmlFilePathFormat);
 
 			this.openPdfButton_Click(this.openPdfFolderButton, null);
 		}

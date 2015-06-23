@@ -6,21 +6,12 @@ using CabinetAutomation.BiesseBeamSaw;
 
 namespace CabinetAutomation.BiesseCabinet
 {
-	public class PartList : List<Part>
+	public class PartList : List<Part>, ICloneable
 	{
 		/// <summary>
 		/// Expands a part with quantity q into q parts each of quantity 1.
 		/// </summary>
 		private Boolean expanded = false;
-
-		public Boolean Expanded
-		{
-			get
-			{
-				return this.expanded;
-			}
-		}
-
 		private static Dictionary<String, Int32> ColumnHeaders;
 
 		static PartList()
@@ -38,11 +29,34 @@ namespace CabinetAutomation.BiesseCabinet
 			}			
 		}
 
+		public PartList()
+		{
+		}
+
+		public PartList(PartList partList)
+		{
+			this.expanded = partList.Expanded;
+
+			foreach (Part p in partList)
+			{
+				this.Add(p.Clone());
+			}
+		}
+
+		public Boolean Expanded
+		{
+			get
+			{
+				return this.expanded;
+			}
+		}
+
 		public HashSet<BoardType> BoardTypes
 		{
 			get
 			{
-				HashSet<BoardType> boardTypes = new HashSet<BoardType>(new BoardType(String.Empty, String.Empty, 0));
+				IEqualityComparer<BoardType> equalityComparer = new BoardType(String.Empty, String.Empty, 0);
+				HashSet<BoardType> boardTypes = new HashSet<BoardType>(equalityComparer);
 
 				foreach (Part p in this)
 				{
@@ -56,23 +70,6 @@ namespace CabinetAutomation.BiesseCabinet
 
 				return boardTypes;
 			}
-		}
-
-		public PartList PartsAfterFilter(Decimal thickness)
-		{
-			PartList parts = new PartList();
-
-			parts.expanded = this.expanded;
-
-			foreach (Part p in this)
-			{
-				if (p.H.HasValue && p.H.Value == thickness)
-				{
-					parts.Add(new Part(p));
-				}
-			}
-
-			return parts;
 		}
 
 		public PartList PartsAfterFilter(BoardType boardType)
@@ -111,15 +108,11 @@ namespace CabinetAutomation.BiesseCabinet
 
 		public PartList Multiply(Int32 quantity)
 		{
-			PartList parts = new PartList();
+			PartList parts = this.Clone();
 
 			foreach (Part p in this)
 			{
-				Part copy = p.Clone();
-
-				copy.Quantity *= quantity;
-
-				parts.Add(copy);
+				p.Quantity *= quantity;
 			}
 
 			return parts;
@@ -144,5 +137,27 @@ namespace CabinetAutomation.BiesseCabinet
 
 			return parts;
 		}
+
+		#region ICloneable Members
+
+		/// <summary>
+		/// Deep clones the current PartList
+		/// </summary>
+		/// <returns>Copy of current PartList</returns>
+		public PartList Clone()
+		{
+			return new PartList(this);
+		}
+
+		#endregion
+
+		#region ICloneable Members
+
+		object ICloneable.Clone()
+		{
+			return new PartList(this);
+		}
+
+		#endregion
 	}
 }
