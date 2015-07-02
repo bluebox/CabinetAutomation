@@ -51,14 +51,20 @@ namespace CabinetAutomation.BiesseCabinet
 
 					Part p = PartFromCsvLine(columns, i);
 
-					if (p != null)
+					if (p == null)
 					{
-						Console.WriteLine("{0}: {1} {2}", p.Code, p.Description, p.Type);
-
-						// p.HinshitsuIntelligenceSetGrain();
-
-						this.Parts.Add(p);
+						continue;
 					}
+
+					Console.WriteLine("{0}: {1} {2}", p.Code, p.Description, p.Type);
+
+					if ( "DOOR PANEL".Equals(p.Name, StringComparison.OrdinalIgnoreCase))
+					{
+						// p.L -= 4;
+						// p.P -= 4;
+					}
+
+					this.Parts.Add(p);
 				}
 			}
 

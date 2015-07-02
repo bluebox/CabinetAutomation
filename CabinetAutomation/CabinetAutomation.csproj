@@ -68,6 +68,7 @@
     <Compile Include="BiesseCabinet\PartList.cs" />
     <Compile Include="BiesseCNC\BarcodeFormat.cs" />
     <Compile Include="BiesseCNC\CFMargin.cs" />
+    <Compile Include="BiesseCNC\PageSpecification.cs" />
     <Compile Include="CabinetAutomation.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -118,7 +118,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 			if (!String.IsNullOrEmpty(part.Code))
 			{
-				this.IIDesc = part.FileCamX;
+				this.IIDesc = part.Material;
 			}
 
 			this.qMin = part.Quantity;

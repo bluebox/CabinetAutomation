@@ -26,9 +26,10 @@ namespace CabinetAutomation
 		{
 			InitializeComponent();
 
-			this.deliveryDateTimePicker.Value = DateTime.Today.AddDays(7).Date;
+			// this.deliveryDateTimePicker.Value = DateTime.Today.AddDays(7).Date;
 			this.codeFormatComboBox.SelectedIndex = 0;
 			this.grainComboBox.SelectedIndex = 0;
+			this.pageTypeComboBox.SelectedIndex = 0;
 		}
 
 		private void submitButton_Click(object sender, EventArgs e)
@@ -55,8 +56,8 @@ namespace CabinetAutomation
 
 			this.labelGenerator.edgeBinding = edgeBindingCheckBox.Checked;
 			this.labelGenerator.Quantity = quantity;
-			this.labelGenerator.DueDate = this.deliveryDateTimePicker.Value;
 			this.labelGenerator.barcodeFormat = BarcodeFormat.Parse(this.codeFormatComboBox.SelectedItem as String);
+			this.labelGenerator.page = PageSpecification.Get(this.pageTypeComboBox.SelectedItem as String);
 
 			String csvFolderName = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
 			String csvFileNameWithoutExtension = Path.GetFileNameWithoutExtension(this.biesseCabinetCsvFilePath);

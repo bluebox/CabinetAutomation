@@ -18,30 +18,19 @@ namespace CabinetAutomation.BiesseCNC
 	/// </summary>
 	public class LabelGenerator
 	{
-		public static XSize A4 = new XSize(XUnit.FromMillimeter(210), XUnit.FromMillimeter(297));
-		public static XSize Letter = new XSize(XUnit.FromMillimeter(210), XUnit.FromMillimeter(279.4));
-		public static XSize Legal = new XSize(XUnit.FromMillimeter(210), XUnit.FromMillimeter(215.9));
-
-		public XSize PageSize;
-
-		public Int32 RowPerPage = 4;
-		public Int32 ColumnPerPage = 2;
-
-		public CFMargin PageMargin;
-		public CFMargin LabelMargin;
 
 		public Int32 Quantity = 1;
-		public DateTime DueDate = DateTime.Today.AddDays(14);
 		public Int32 barcodeFormat = BiesseCNC.BarcodeFormat.Default;
 		public Int32 grainType = GrainType.Default;
 		public Boolean edgeBinding = false;
 
-		static XPen PenLightGray1pt = new XPen(XColor.FromKnownColor(KnownColor.LightGray), XUnit.FromPoint(1));
-		static XPen PenBlack1pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(1));
-		static XPen PenBlack3pt = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(3));
-		static XFont Arial8 = new XFont("Arial", 8, XFontStyle.Regular);
-		static XFont ArialLarge = new XFont("Arial", 14, XFontStyle.Regular);
-		static XBrush blackBrush = XBrushes.Black;
+		static readonly XPen LightGrayPen = new XPen(XColor.FromKnownColor(KnownColor.LightGray), XUnit.FromPoint(1));
+		static readonly XPen BlackPen = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(1));
+		static readonly XPen Black3ptPen = new XPen(XColor.FromKnownColor(KnownColor.Black), XUnit.FromPoint(3));
+		static readonly XFont Arial8 = new XFont("Arial", 8, XFontStyle.Regular);
+		static readonly XFont ArialLarge = new XFont("Arial", 14, XFontStyle.Regular);
+		static readonly XBrush blackBrush = XBrushes.Black;
+		static readonly XPen PurplePen = new XPen(XColor.FromKnownColor(KnownColor.Purple), XUnit.FromPoint(1));
 
 		static Decimal Binding00 = new Decimal(0);
 		static Decimal Binding08 = new Decimal(0.8);
@@ -49,15 +38,15 @@ namespace CabinetAutomation.BiesseCNC
 		static Decimal Binding13 = new Decimal(1.3);
 		static Decimal Binding20 = new Decimal(2.0);
 
+		public PageSpecification page = PageSpecification.A4Oddy4x2;
+
 		public LabelGenerator()
 		{
-			this.PageSize = A4;
-			this.PageMargin = new CFMargin(10, 5);
-			this.LabelMargin = new CFMargin(5);
 		}
 
 		public void SaveToPdf(String filePath, PartList parts)
 		{
+
 			parts = parts.Multiply(this.Quantity);
 			parts = parts.PartsAfterExpanding();
 			parts = parts.PartsWithoutFileCamX();
@@ -82,59 +71,50 @@ namespace CabinetAutomation.BiesseCNC
 				document.Info.CreationDate = DateTime.Now;
 				// document.Info.Producer = "HINSHISU Cabinet Automation";
 
-				Int32 labelsPerPage = this.RowPerPage * this.ColumnPerPage;
-				Int32 numberOfPage = (int)(Math.Ceiling(parts.Count * 1.0 / labelsPerPage));
+				Int32 numberOfPage = (int)(Math.Ceiling(parts.Count * 1.0 / this.page.LabelsPerPage));
 
-				XSize pageSizeAfterMargin = new XSize(
-					this.PageSize.Width - this.PageMargin.Left - this.PageMargin.Right,
-					this.PageSize.Height - this.PageMargin.Top - this.PageMargin.Bottom);
-				XPen pen = new XPen(XColor.FromKnownColor(KnownColor.Purple), XUnit.FromPoint(1));
 
-				XSize labelSize = new XSize(
-					pageSizeAfterMargin.Width / this.ColumnPerPage,
-					pageSizeAfterMargin.Height / this.RowPerPage
-				);
-
-				XSize labelSizeAfterMargin = new XSize(
-					labelSize.Width - this.LabelMargin.Left - this.LabelMargin.Right,
-					labelSize.Height - this.LabelMargin.Top - this.LabelMargin.Bottom
-				);
-
-				XPoint pageMarginOffset = new XPoint(this.PageMargin.Left, this.PageMargin.Top);
-				XPoint labelMarginOffset = new XPoint(this.LabelMargin.Left, this.LabelMargin.Top);
 				PdfPage page = null;
 				XGraphics graphics = null;
 
-				for (int i = 0; i < parts.Count; i++)
+				for (int i = 0, p = 0; i < parts.Count; i++)
 				{
 					Part part = parts[i];
-					Int32 r = (i / this.ColumnPerPage) % this.RowPerPage;
-					Int32 c = i % this.ColumnPerPage;
+					Int32 r = (i / this.page.ColumnPerPage) % this.page.RowPerPage;
+					Int32 c = i % this.page.ColumnPerPage;
 
 					if (r == 0 && c == 0)
 					{
 						page = document.AddPage();
+						p += 1;
 
-						page.Height = this.PageSize.Height;
-						page.Width = this.PageSize.Width;
+						page.Height = this.page.PageSize.Height;
+						page.Width = this.page.PageSize.Width;
 
 						graphics = XGraphics.FromPdfPage(page);
 
+											
+						String pageLine = String.Format("Page {0} of {1}", p, numberOfPage);
+
+						graphics.DrawString(pageLine, ArialLarge, blackBrush, this.page.PageSize.Width/2, 5, XStringFormats.TopCenter);
 						// graphics.DrawRectangle(pen, new XRect(this.PageMargin.Left, this.PageMargin.Top, pageSizeAfterMargin.Width, pageSizeAfterMargin.Height));
 					}
 
-					XPoint labelOffset = new XPoint(
-						pageMarginOffset.X + c * labelSize.Width + this.LabelMargin.Left,
-						pageMarginOffset.Y + r * labelSize.Height + this.LabelMargin.Top);
-
-					XRect labelRectangle = new XRect(labelOffset, labelSizeAfterMargin);
+					XRect labelRectangle = this.page.GetLabelRectangle(r, c);
 
 					this.DrawLabel(graphics, labelRectangle, part, this.barcodeFormat);
 
 					Console.WriteLine("{0} {1} {2} {3}", labelRectangle.X, labelRectangle.Y, labelRectangle.Width, labelRectangle.Height);
 				}
 
-				document.Save(filePath);
+				try
+				{
+					document.Save(filePath);
+				}
+				catch (IOException ex)
+				{
+					MessageBox.Show(ex.Message);
+				}
 			}
 		}
 
@@ -182,28 +162,30 @@ namespace CabinetAutomation.BiesseCNC
 				part.Rotate();
 			}
 
+			// graphics.DrawRectangle(PurplePen, rectangle);
+
+			if (this.page.Name == PageSpecification.A4Oddy4x2Name)
+			{
+				this.DrawA44x2(graphics, rectangle, part);
+			}
+
+			if (this.page.Name == PageSpecification.A4M36x2Name)
+			{
+				this.DrawA46x2(graphics, rectangle, part);
+			}
+
+			if (this.edgeBinding)
+			{
+				this.DrawEdgeBinding(graphics, rectangle, part);
+			}
+		}
+
+		private void DrawA44x2(XGraphics graphics, XRect rectangle, Part part)
+		{
 			XUnit y = rectangle.Top + XUnit.FromMillimeter(5);
 			XUnit x = rectangle.Left + XUnit.FromMillimeter(20);
-			String barcodeText = String.Empty;
-			String barcodeLabel = String.Empty;
-
-			switch (format)
-			{
-				case BiesseCNC.BarcodeFormat.Folder4Filename4:
-					if (!String.IsNullOrEmpty(part.FileCamX))
-					{
-						barcodeText = part.OwnerName.PadRight(4, '-').Substring(0, 4);
-						barcodeText += part.FileCamX.PadRight(4, '-').Substring(0, 4);
-						barcodeLabel = String.Format("{0} / {1}", part.OwnerName, part.FileCamX);
-					}
-
-					break;
-
-				default:
-					barcodeText = part.FileCamX;
-					barcodeLabel = barcodeText;
-					break;
-			}
+			String barcodeText = part.FileCamX;
+			String barcodeLabel = barcodeText;
 
 			// Extra top space
 			y += XUnit.FromMillimeter(5);
@@ -243,40 +225,64 @@ namespace CabinetAutomation.BiesseCNC
 				Substring(part.Grain, 15), Substring(part.Colour, 15),
 				Substring(part.Material, 15));
 
-			if (line3.Length <= 0)
-			{
-				line3 = String.Empty;
-			}
-			{
-				graphics.DrawString(line3, Arial8, blackBrush, new XPoint(x, y));
-				y += XUnit.FromMillimeter(5);
-			}
+			graphics.DrawString(line3, Arial8, blackBrush, new XPoint(x, y));
+			y += XUnit.FromMillimeter(5);
 
 			{
 				String line4 = String.Format("{2} X {1} X {3}",
 					part.Code.PadLeft(3, ' '), part.Length, part.Depth, part.Height);
 
-				if (line4.Length <= 0)
-				{
-					line4 = String.Empty;
-				}
-				{
-					y += XUnit.FromMillimeter(0);
-					graphics.DrawString(line4, ArialLarge, blackBrush, new XPoint(x, y));
-					y += XUnit.FromMillimeter(3);
-				}
+				y += XUnit.FromMillimeter(0);
+				graphics.DrawString(line4, ArialLarge, blackBrush, new XPoint(x, y));
+				y += XUnit.FromMillimeter(3);
+
 			}
 
-			String line5 = part.Customer + " " + this.DueDate.ToShortDateString();
+			String line5 = part.Customer;
 
 			graphics.DrawString(line5, Arial8, blackBrush, new XPoint(x, y));
 			y += XUnit.FromMillimeter(5);
+		}
 
+		private void DrawA46x2(XGraphics graphics, XRect rectangle, Part part)
+		{
+			XUnit y = rectangle.Top + XUnit.FromMillimeter(5);
+			XUnit x = rectangle.Center.X;
+			XUnit lineHeight = new XUnit(graphics.MeasureString("Line", Arial8).Height);
+			XUnit lineHeightLarge = new XUnit(graphics.MeasureString("Line", ArialLarge).Height);
+			// Space from top for edge binding.
+			y += lineHeight;
 
-			if (this.edgeBinding)
+			String line1 = String.Format("{0} - {1} - {2}",
+				part.Code, part.FileCamX, Substring(part.Description, 20));
+
+			graphics.DrawString(line1, Arial8, blackBrush, new XPoint(x, y), XStringFormats.TopCenter);
+			y += lineHeight;
+
+			String line2 = part.OwnerName;
+
+			graphics.DrawString(line2, Arial8, blackBrush, new XPoint(x, y), XStringFormats.TopCenter);
+			y += lineHeight;
+
+			String line3 = String.Format("{0} {1} {2}",
+				Substring(part.Grain, 15), Substring(part.Colour, 15),
+				Substring(part.Material, 15));
+
+			graphics.DrawString(line3, Arial8, blackBrush, new XPoint(x, y), XStringFormats.TopCenter);
+			y += lineHeight;
+
 			{
-				this.DrawEdgeBinding(graphics, rectangle, part);
+				String line4 = String.Format("{2} X {1} X {3}",
+					part.Code.PadLeft(3, ' '), part.Length, part.Depth, part.Height);
+
+				graphics.DrawString(line4, ArialLarge, blackBrush, new XPoint(x, y), XStringFormats.TopCenter);
+				y += lineHeightLarge;
 			}
+
+			String line5 = part.Customer;
+
+			graphics.DrawString(line5, Arial8, blackBrush, new XPoint(x, y), XStringFormats.TopCenter);
+			y += lineHeight;
 		}
 
 		String GetEdgeBindingString(Decimal d, Boolean horizontal)
@@ -372,23 +378,23 @@ namespace CabinetAutomation.BiesseCNC
 
 			if (binding >= Binding08 && binding <= Binding10)
 			{
-				graphics.DrawLine(PenBlack1pt, p1, p2);
+				graphics.DrawLine(BlackPen, p1, p2);
 			}
 			else if (binding > Binding10)
 			{
 				if (p1.X == p2.X)
 				{
-					graphics.DrawLine(PenBlack1pt, p1.X - d, p1.Y, p2.X - d, p2.Y);
-					graphics.DrawLine(PenBlack1pt, p1.X + d, p1.Y, p2.X + d, p2.Y);
+					graphics.DrawLine(BlackPen, p1.X - d, p1.Y, p2.X - d, p2.Y);
+					graphics.DrawLine(BlackPen, p1.X + d, p1.Y, p2.X + d, p2.Y);
 				}
 				else if (p1.Y == p2.Y)
 				{
-					graphics.DrawLine(PenBlack1pt, p1.X, p1.Y - d, p2.X, p2.Y - d);
-					graphics.DrawLine(PenBlack1pt, p1.X, p1.Y + d, p2.X, p2.Y + d);
+					graphics.DrawLine(BlackPen, p1.X, p1.Y - d, p2.X, p2.Y - d);
+					graphics.DrawLine(BlackPen, p1.X, p1.Y + d, p2.X, p2.Y + d);
 				}
 				else
 				{
-					graphics.DrawLine(PenBlack3pt, p1, p2);
+					graphics.DrawLine(Black3ptPen, p1, p2);
 				}
 			}
 		}

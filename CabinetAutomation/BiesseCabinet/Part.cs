@@ -10,7 +10,7 @@ namespace CabinetAutomation.BiesseCabinet
 	{
 		/// <summary>
 		/// Bad side back side of the board.
-		/// The `bad` side is the white / inner side.
+		/// The `bad` side is the `white` / `inner` side.
 		/// The `good` side may have color or finish or may be white.
 		/// </summary>
 		public static List<String> PartsWithStickerOnBadSide = new List<String>(new String[]{
@@ -23,6 +23,7 @@ namespace CabinetAutomation.BiesseCabinet
 			"LEFT LATERAL SIDE",
 			"RIGHT LATERAL SIDE",
 			"TOP STRETCHER",
+			"DOOR PANEL"
 		});
 
 		public static List<String> PartsWithStickerOnGoodSide = new List<String>(new String[]{
