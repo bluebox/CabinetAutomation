@@ -10,6 +10,7 @@ using System.IO;
 using CabinetAutomation.BiesseCabinet;
 using CabinetAutomation.BiesseCNC;
 using CabinetAutomation.BiesseBeamSaw;
+using CabinetAutomation.Cix;
 
 namespace CabinetAutomation
 {
@@ -26,9 +27,6 @@ namespace CabinetAutomation
 		{
 			InitializeComponent();
 
-			// this.deliveryDateTimePicker.Value = DateTime.Today.AddDays(7).Date;
-			this.codeFormatComboBox.SelectedIndex = 0;
-			this.grainComboBox.SelectedIndex = 0;
 			this.pageTypeComboBox.SelectedIndex = 0;
 		}
 
@@ -52,11 +50,11 @@ namespace CabinetAutomation
 				MessageBox.Show("Please select a valid quantity.");
 			}
 
-			Int32 grainType = GrainType.Parse(grainComboBox.Text);
+			Int32 grainType = GrainType.Default;
 
 			this.labelGenerator.edgeBinding = edgeBindingCheckBox.Checked;
 			this.labelGenerator.Quantity = quantity;
-			this.labelGenerator.barcodeFormat = BarcodeFormat.Parse(this.codeFormatComboBox.SelectedItem as String);
+			this.labelGenerator.barcodeFormat = BarcodeFormat.Default;
 			this.labelGenerator.page = PageSpecification.Get(this.pageTypeComboBox.SelectedItem as String);
 
 			String csvFolderName = Path.GetDirectoryName(this.biesseCabinetCsvFilePath);
@@ -76,6 +74,10 @@ namespace CabinetAutomation
 			this.beamSawXmlGenerator.Quantity = quantity;
 
 			beamSawXmlGenerator.Generate(this.beamSawXmlFilePathFormat);
+
+			FinderUpdater fu = new FinderUpdater(csvFolderName);
+
+			fu.FindAndUpdate();
 
 			this.openPdfButton_Click(this.openPdfFolderButton, null);
 		}

@@ -29,12 +29,10 @@
 		private void InitializeComponent()
 		{
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.pageTypeComboBox = new System.Windows.Forms.ComboBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.edgeBindingCheckBox = new System.Windows.Forms.CheckBox();
 			this.label8 = new System.Windows.Forms.Label();
-			this.grainComboBox = new System.Windows.Forms.ComboBox();
-			this.label7 = new System.Windows.Forms.Label();
-			this.codeFormatComboBox = new System.Windows.Forms.ComboBox();
-			this.label2 = new System.Windows.Forms.Label();
 			this.quantityTextBox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.browseButton = new System.Windows.Forms.Button();
@@ -47,8 +45,6 @@
 			this.openPdfButton = new System.Windows.Forms.Button();
 			this.submitButton = new System.Windows.Forms.Button();
 			this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-			this.label3 = new System.Windows.Forms.Label();
-			this.pageTypeComboBox = new System.Windows.Forms.ComboBox();
 			this.panel1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -58,10 +54,6 @@
 			this.panel1.Controls.Add(this.label3);
 			this.panel1.Controls.Add(this.edgeBindingCheckBox);
 			this.panel1.Controls.Add(this.label8);
-			this.panel1.Controls.Add(this.grainComboBox);
-			this.panel1.Controls.Add(this.label7);
-			this.panel1.Controls.Add(this.codeFormatComboBox);
-			this.panel1.Controls.Add(this.label2);
 			this.panel1.Controls.Add(this.quantityTextBox);
 			this.panel1.Controls.Add(this.label1);
 			this.panel1.Controls.Add(this.browseButton);
@@ -77,6 +69,26 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(369, 410);
 			this.panel1.TabIndex = 1;
+			// 
+			// pageTypeComboBox
+			// 
+			this.pageTypeComboBox.FormattingEnabled = true;
+			this.pageTypeComboBox.Items.AddRange(new object[] {
+            "Oddy A4 4x2",
+            "M3 A4 6x2"});
+			this.pageTypeComboBox.Location = new System.Drawing.Point(128, 61);
+			this.pageTypeComboBox.Name = "pageTypeComboBox";
+			this.pageTypeComboBox.Size = new System.Drawing.Size(200, 21);
+			this.pageTypeComboBox.TabIndex = 24;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(3, 64);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(59, 13);
+			this.label3.TabIndex = 23;
+			this.label3.Text = "Page Type";
 			// 
 			// edgeBindingCheckBox
 			// 
@@ -97,53 +109,6 @@
 			this.label8.Size = new System.Drawing.Size(69, 13);
 			this.label8.TabIndex = 21;
 			this.label8.Text = "Edge binding";
-			// 
-			// grainComboBox
-			// 
-			this.grainComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.grainComboBox.FormattingEnabled = true;
-			this.grainComboBox.Items.AddRange(new object[] {
-            "Automatic",
-            "Long edge",
-            "None"});
-			this.grainComboBox.Location = new System.Drawing.Point(128, 382);
-			this.grainComboBox.Name = "grainComboBox";
-			this.grainComboBox.Size = new System.Drawing.Size(200, 21);
-			this.grainComboBox.TabIndex = 20;
-			this.grainComboBox.Visible = false;
-			// 
-			// label7
-			// 
-			this.label7.AutoSize = true;
-			this.label7.Location = new System.Drawing.Point(3, 358);
-			this.label7.Name = "label7";
-			this.label7.Size = new System.Drawing.Size(64, 13);
-			this.label7.TabIndex = 19;
-			this.label7.Text = "Code format";
-			this.label7.Visible = false;
-			// 
-			// codeFormatComboBox
-			// 
-			this.codeFormatComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.codeFormatComboBox.FormattingEnabled = true;
-			this.codeFormatComboBox.Items.AddRange(new object[] {
-            "Filename",
-            "Folder - Filename"});
-			this.codeFormatComboBox.Location = new System.Drawing.Point(128, 355);
-			this.codeFormatComboBox.Name = "codeFormatComboBox";
-			this.codeFormatComboBox.Size = new System.Drawing.Size(200, 21);
-			this.codeFormatComboBox.TabIndex = 18;
-			this.codeFormatComboBox.Visible = false;
-			// 
-			// label2
-			// 
-			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(3, 385);
-			this.label2.Name = "label2";
-			this.label2.Size = new System.Drawing.Size(32, 13);
-			this.label2.TabIndex = 17;
-			this.label2.Text = "Grain";
-			this.label2.Visible = false;
 			// 
 			// quantityTextBox
 			// 
@@ -257,26 +222,6 @@
 			this.openFileDialog1.RestoreDirectory = true;
 			this.openFileDialog1.Title = "Open Biesse Cabinet output (CSV)";
 			// 
-			// label3
-			// 
-			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(5, 64);
-			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(59, 13);
-			this.label3.TabIndex = 23;
-			this.label3.Text = "Page Type";
-			// 
-			// pageTypeComboBox
-			// 
-			this.pageTypeComboBox.FormattingEnabled = true;
-			this.pageTypeComboBox.Items.AddRange(new object[] {
-            "Oddy A4 4x2",
-            "M3 A4 6x2"});
-			this.pageTypeComboBox.Location = new System.Drawing.Point(128, 61);
-			this.pageTypeComboBox.Name = "pageTypeComboBox";
-			this.pageTypeComboBox.Size = new System.Drawing.Size(200, 21);
-			this.pageTypeComboBox.TabIndex = 24;
-			// 
 			// CabinetAutomation
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -304,12 +249,8 @@
 		private System.Windows.Forms.Button browseButton;
 		private System.Windows.Forms.Label label6;
 		private System.Windows.Forms.OpenFileDialog openFileDialog1;
-		private System.Windows.Forms.ComboBox codeFormatComboBox;
-		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.TextBox quantityTextBox;
 		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ComboBox grainComboBox;
-		private System.Windows.Forms.Label label7;
 		private System.Windows.Forms.CheckBox edgeBindingCheckBox;
 		private System.Windows.Forms.Label label8;
 		private System.Windows.Forms.Label label3;
