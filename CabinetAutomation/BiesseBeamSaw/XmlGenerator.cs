@@ -29,30 +29,37 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 		public void Generate(String outputFilePathFormat)
 		{
-			parts = parts.Multiply(this.Quantity);
-			
-			foreach (BoardType boardType in parts.BoardTypes)
+			if (this.Quantity != 1)
 			{
-				String outputFilePath = String.Format(outputFilePathFormat, boardType);
-				CutList cutList = new CutList(boardType, parts);
+				this.parts = this.parts.Multiply(this.Quantity);
+			}
 
-				XmlDocument document = new XmlDocument();
-
-				cutList.MakeTree(document);
-
-				var settings = new XmlWriterSettings
+			foreach (BoardType boardType in this.parts.BoardTypes)
+			{
+				foreach (bool grouped in new bool[] { false, true })
 				{
-					Indent = true,
-					IndentChars = @"    ",
-					NewLineChars = Environment.NewLine,
-					NewLineHandling = NewLineHandling.Replace,
-				};
+					String outputFilePath = String.Format(outputFilePathFormat, grouped ? "" : "/ungrouped", boardType);
+					CutList cutList = new CutList(boardType, parts, grouped);
+					XmlDocument document = new XmlDocument();
 
-				using (TextWriter textWriter = new StreamWriter(outputFilePath))
-				{
-					using (var writer = XmlWriter.Create(textWriter, settings))
+					Directory.CreateDirectory(Path.GetDirectoryName(outputFilePath));
+
+					cutList.MakeTree(document);
+
+					var settings = new XmlWriterSettings
 					{
-						document.Save(writer);
+						Indent = true,
+						IndentChars = @"    ",
+						NewLineChars = Environment.NewLine,
+						NewLineHandling = NewLineHandling.Replace,
+					};
+
+					using (TextWriter textWriter = new StreamWriter(outputFilePath))
+					{
+						using (var writer = XmlWriter.Create(textWriter, settings))
+						{
+							document.Save(writer);
+						}
 					}
 				}
 			}

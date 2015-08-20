@@ -39,6 +39,7 @@
     <OutputPath>bin\x86\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EPPlus, Version=4.0.4.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PdfSharp, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -110,6 +111,8 @@
     <Compile Include="Slugify.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="external\EPPlus.dll" />
+    <Content Include="external\EPPlus.XML" />
     <Content Include="external\PdfSharp.dll" />
     <Content Include="external\PdfSharp.pdb" />
     <Content Include="external\PdfSharp.XML" />

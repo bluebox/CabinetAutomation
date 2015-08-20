@@ -19,27 +19,56 @@ namespace CabinetAutomation.BiesseBeamSaw
 		public String NBoards = "1";
 
 		public BoardType BoardType;
-		public List<BeamSawPart> parts;
+		public List<BeamSawPart> beamSawParts;
 
-		public CutList(BoardType boardType, PartList parts)
+		public CutList(BoardType boardType, PartList parts, bool GroupBySize)
 		{
-			this.BoardType = boardType;
-			parts = parts.PartsAfterFilter(boardType);
-			parts.Sort();
 
-			this.parts = new List<BeamSawPart>();
+			BeamSawPartComparer c = new BeamSawPartComparer(); 
+
+			this.BoardType = boardType;
+
+			parts = parts.PartsAfterFilter(boardType);
+			
+			parts.Sort(new PartComparerForXmlCutlist());
+
+			this.beamSawParts = new List<BeamSawPart>();
 
 			for (int i = 0; i < parts.Count; i++)
 			{
 				Part part = parts[i];
-				BeamSawPart beamSawPart = new BeamSawPart(part);
+				BeamSawPart beamSawPart = new BeamSawPart(parts[i]);
 
-				beamSawPart.id = String.Format("P{0}", i + 1);
+				if (!GroupBySize)
+				{
+					this.beamSawParts.Add(beamSawPart);
 
-				this.parts.Add(beamSawPart);
+					continue;
+				}
+
+				if (this.beamSawParts.Count == 0)
+				{
+					this.beamSawParts.Add(beamSawPart);
+
+					continue;
+				}
+
+				BeamSawPart lastBeamSawPart = this.beamSawParts.Last();
+
+				if (c.Compare(lastBeamSawPart, beamSawPart) == 0)
+				{
+					lastBeamSawPart.qMin += beamSawPart.qMin;
+
+					lastBeamSawPart.IDesc += "_" + beamSawPart.IDesc;
+					lastBeamSawPart.IIDesc += "_" + beamSawPart.IIDesc;
+
+					continue;
+				}
+
+				this.beamSawParts.Add(beamSawPart);
 			}
 
-			this.NParts = this.parts.Count.ToString();
+			this.NParts = this.beamSawParts.Count.ToString();
 		}
 
 		public XmlElement MakeTree(XmlDocument document)
@@ -49,9 +78,9 @@ namespace CabinetAutomation.BiesseBeamSaw
 			c.SetAttribute("NParts", this.NParts);
 			c.SetAttribute("NBoards", this.NBoards);
 
-			for (int i = 0; i < this.parts.Count; i++)
+			for (int i = 0; i < this.beamSawParts.Count; i++)
 			{
-				BeamSawPart part = this.parts[i];
+				BeamSawPart part = this.beamSawParts[i];
 				
 				c.AppendChild(part.MakeTree(document));
 			}
@@ -65,6 +94,115 @@ namespace CabinetAutomation.BiesseBeamSaw
 
 			return c;
 		}
+	}
+
+	class BeamSawPartComparer : IComparer<BeamSawPart>
+	{
+		#region IComparer<BeamSawPart> Members
+
+		/// <summary>
+		/// This assumes that the materals for both part are same.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		public int Compare(BeamSawPart x, BeamSawPart y)
+		{
+			int c;
+
+			c = String.Compare(x.L, y.L);
+
+			if (c != 0)
+			{
+				return c;
+			}
+
+			c = String.Compare(x.W, y.W);
+
+			if (c != 0)
+			{
+				return c;
+			}
+
+			c = String.Compare(x.Grain, y.Grain);
+
+			if (c != 0)
+			{
+				return c;
+			}
+
+			return 0;
+		}
+
+		#endregion
+	}
+
+	class PartComparerForXmlCutlist : IComparer<Part>
+	{
+		#region IComparer<Part> Members
+
+		/**
+		 * Compares by 
+		 */
+		public int Compare(Part x, Part y)
+		{
+			int c;
+
+			c = String.Compare(x.Material, y.Material);
+
+			if (c != 0)
+			{
+				return c;
+			}
+
+			c = String.Compare(x.Colour, y.Colour);
+
+			if (c != 0)
+			{
+				return c;
+			}
+
+			if (x.L.HasValue && y.L.HasValue)
+			{
+				c = Decimal.Compare(x.L.Value, y.L.Value);
+
+				if (c != 0)
+				{
+					return c;
+				}
+			}
+
+			if (x.H.HasValue && y.H.HasValue)
+			{
+				c = Decimal.Compare(x.H.Value, y.H.Value);
+
+				if (c != 0)
+				{
+					return c;
+				}
+			}
+
+			if (x.P.HasValue && y.P.HasValue)
+			{
+				c = Decimal.Compare(x.P.Value, y.P.Value);
+
+				if (c != 0)
+				{
+					return c;
+				}
+			}
+
+			c = String.Compare(x.Grain, y.Grain);
+
+			if (c != 0)
+			{
+				return c;
+			}
+
+			return 0;
+		}
+
+		#endregion
 	}
 
 	/// <summary>
@@ -109,12 +247,7 @@ namespace CabinetAutomation.BiesseBeamSaw
 				this.Grain = part.Grain;
 			}
 
-			String fileCamX = part.FileCamX;
-
-			if (!String.IsNullOrEmpty(fileCamX))
-			{
-				this.IDesc = String.Format("{0} {1}", part.Code, part.Name);
-			}
+			this.IDesc = String.Format("{0}__{1}__{2}", part.Code, part.OwnerName, part.Name);
 
 			if (!String.IsNullOrEmpty(part.Code))
 			{

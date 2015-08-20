@@ -29,6 +29,8 @@ namespace CabinetAutomation.BiesseCabinet
 		public static List<String> PartsWithStickerOnGoodSide = new List<String>(new String[]{
 			"SHELF",
 			"FRONT TOE KICK",
+
+			"PANEL", // TODO: Validate this.
 		});
 
 		public String Code = String.Empty;
