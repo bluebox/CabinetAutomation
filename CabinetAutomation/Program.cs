@@ -4,6 +4,8 @@ using System.Linq;
 using System.Windows.Forms;
 using CabinetAutomation.Cix;
 using System.IO;
+using CabinetAutomation.BiesseCabinet;
+using CabinetAutomation.Hinshitsu;
 
 namespace CabinetAutomation
 {
@@ -15,7 +17,6 @@ namespace CabinetAutomation
 		[STAThread]
 		static void Main()
 		{
-			// CsvParser parser = new CsvParser("basse-cabinet-output.csv");
 			// LabelGenerator gen = new LabelGenerator();
 
 			// gen.SaveToPdf(String.Format("test-{0}.pdf", DateTime.Now.Ticks), parser.Parts);

@@ -11,6 +11,7 @@ using CabinetAutomation.BiesseCabinet;
 using CabinetAutomation.BiesseCNC;
 using CabinetAutomation.BiesseBeamSaw;
 using CabinetAutomation.Cix;
+using CabinetAutomation.Hinshitsu;
 
 namespace CabinetAutomation
 {
@@ -66,7 +67,7 @@ namespace CabinetAutomation
 
 			this.labelGenerator.SaveToPdf(this.biesseCncLabelFilePath, biesseCabinetCsvParser.Parts.Clone());
 
-			String beamSawXmlFileNameFormat = String.Format("BeamSawXml-{0}{1}/{0}-{2}.xml", csvFileNameWithoutExtension, "{0}", "{1}");
+			String beamSawXmlFileNameFormat = String.Format("BeamSaw-{0}{1}/{0}-{2}.xml", csvFileNameWithoutExtension, "{0}", "{1}");
 
 			this.beamSawXmlFilePathFormat = Path.Combine(csvFolderName, beamSawXmlFileNameFormat);
 
@@ -74,6 +75,33 @@ namespace CabinetAutomation
 			this.beamSawXmlGenerator.Quantity = quantity;
 
 			beamSawXmlGenerator.Generate(this.beamSawXmlFilePathFormat);
+
+			{
+				var grouped = true;
+				CutListGenerator cutListGenerator = new CutListGenerator(
+					this.biesseCabinetCsvParser.Parts, grouped);
+
+				String outputFile = String.Format(csvFolderName + "/BeamSaw-{0}{1}/{0}-{2}.xlsx", 
+
+					csvFileNameWithoutExtension, 
+					grouped ? "" : "/ungrouped", 
+					grouped ? "grouped" : "ungrouped");
+
+				cutListGenerator.Generate(outputFile);
+			}
+
+			{
+				var grouped = false;
+				CutListGenerator cutListGenerator = new CutListGenerator(
+					this.biesseCabinetCsvParser.Parts, grouped);
+
+				String outputFile = String.Format(csvFolderName + "/BeamSaw-{0}{1}/{0}-{2}.xlsx",
+					csvFileNameWithoutExtension,
+					grouped ? "" : "/ungrouped",
+					grouped ? "grouped" : "ungrouped");
+
+				cutListGenerator.Generate(outputFile);
+			}
 
 			FinderUpdater fu = new FinderUpdater(csvFolderName);
 

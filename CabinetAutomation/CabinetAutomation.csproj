@@ -81,6 +81,7 @@
     <Compile Include="Cix\FinderUpdater.cs" />
     <Compile Include="Cix\Updater.cs" />
     <Compile Include="Cix\Tokenizer.cs" />
+    <Compile Include="Hinshitsu\CutListGenerator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="CabinetAutomation.resx">
